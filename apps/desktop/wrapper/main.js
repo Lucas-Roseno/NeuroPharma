@@ -5,14 +5,14 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs');
 
-const RELEASES_API_URL = 'https://api.github.com/repos/Lucas-Roseno/BioMolExplorer/releases/latest';
-const RELEASES_PAGE_URL = 'https://github.com/Lucas-Roseno/BioMolExplorer/releases';
+const RELEASES_API_URL = 'https://api.github.com/repos/Lucas-Roseno/NeuroPharma/releases/latest';
+const RELEASES_PAGE_URL = 'https://github.com/Lucas-Roseno/NeuroPharma/releases';
 
-// Same location init-native.sh installs into ($HOME/.biomolexplorer).
-const INSTALL_DIR = path.join(os.homedir(), '.biomolexplorer');
+// Same location init-native.sh installs into ($HOME/.neuropharma).
+const INSTALL_DIR = path.join(os.homedir(), '.neuropharma');
 // Release assets needed for an automatic update (see pack-source.js).
-const SRC_ASSET = 'biomolexplorer-src.tar.gz';
-const SHA_ASSET = 'biomolexplorer-src.tar.gz.sha256';
+const SRC_ASSET = 'neuropharma-src.tar.gz';
+const SHA_ASSET = 'neuropharma-src.tar.gz.sha256';
 const UPDATE_TIMEOUT_MS = 5000;
 const DOWNLOAD_TIMEOUT_MS = 300000;
 
@@ -21,7 +21,7 @@ const DOWNLOAD_TIMEOUT_MS = 300000;
 // set up in createWindow(), the same trick used there for opening external links.
 const RETRY_URL = 'bmx-action:retry';
 
-// Resolves the base path where init-native.sh and biomolexplorer-src.tar.gz are located.
+// Resolves the base path where init-native.sh and neuropharma-src.tar.gz are located.
 // Linux AppImage exposes APPIMAGE; macOS uses process.execPath; dev uses process.cwd().
 function resolveBasePath() {
   if (process.env.APPIMAGE) {
@@ -80,7 +80,7 @@ async function checkForUpdates(win, currentVersion) {
   let data;
   try {
     const res = await fetch(RELEASES_API_URL, {
-      headers: { 'User-Agent': 'BioMolExplorer', Accept: 'application/vnd.github+json' },
+      headers: { 'User-Agent': 'NeuroPharma', Accept: 'application/vnd.github+json' },
       signal: AbortSignal.timeout(UPDATE_TIMEOUT_MS),
     });
     // 404 means the repo has no published release yet — treat like any other
@@ -114,7 +114,7 @@ async function checkForUpdates(win, currentVersion) {
   const { response } = await dialog.showMessageBox(win, {
     type: 'info',
     title: 'Update Available',
-    message: `BioMolExplorer v${latest} is available`,
+    message: `NeuroPharma v${latest} is available`,
     detail: canAutoUpdate
       ? `You are currently running v${currentVersion}.\nDownload and install it now? Your datasets and results are kept.`
       : `You are currently running v${currentVersion}.\nThis release has no automatic update package. Open the download page?`,
@@ -138,7 +138,7 @@ async function checkForUpdates(win, currentVersion) {
 // Downloads the release package and checks it against the published SHA-256.
 // Resolves to the verified local path; rejects on network errors or a mismatch.
 async function downloadUpdate(update) {
-  const headers = { 'User-Agent': 'BioMolExplorer' };
+  const headers = { 'User-Agent': 'NeuroPharma' };
   const signal = AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS);
   const [srcRes, shaRes] = await Promise.all([
     fetch(update.srcUrl, { headers, signal }),
@@ -157,7 +157,7 @@ async function downloadUpdate(update) {
 
   const dir = path.join(INSTALL_DIR, 'downloads');
   fs.mkdirSync(dir, { recursive: true });
-  const dest = path.join(dir, `biomolexplorer-src-${update.version}.tar.gz`);
+  const dest = path.join(dir, `neuropharma-src-${update.version}.tar.gz`);
   fs.writeFileSync(dest, data);
   return dest;
 }
@@ -170,7 +170,7 @@ async function prepareUpdate(win, currentVersion) {
     const update = await checkForUpdates(win, currentVersion);
     if (!update) return process.env;
 
-    setBadge(win, `Downloading BioMolExplorer v${update.version}...`);
+    setBadge(win, `Downloading NeuroPharma v${update.version}...`);
     const srcTar = await downloadUpdate(update);
     setBadge(win, `v${update.version} · Installing update...`);
     return { ...process.env, BMX_SRC_TAR: srcTar };
@@ -180,7 +180,7 @@ async function prepareUpdate(win, currentVersion) {
       type: 'warning',
       title: 'Update Failed',
       message: 'The update could not be installed.',
-      detail: `${err.message}\n\nBioMolExplorer v${currentVersion} will start instead.`,
+      detail: `${err.message}\n\nNeuroPharma v${currentVersion} will start instead.`,
       buttons: ['OK'],
     }).catch(() => {});
     return process.env;
@@ -253,7 +253,7 @@ function startLauncher(win) {
 
       <div style="background-color:%235b4382; color:white; padding: 15px 30px; display:flex; align-items:center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
         <div style="font-size:26px; font-weight:500; letter-spacing: 0.5px; display:flex; align-items:center;">
-          <span style="font-size:32px; margin-right: 12px; margin-bottom: 4px;">⬡</span>BioMolExplorer
+          <span style="font-size:32px; margin-right: 12px; margin-bottom: 4px;">⬡</span>NeuroPharma
         </div>
       </div>
 
@@ -280,8 +280,8 @@ function startLauncher(win) {
     showErrorScreen(win,
       `Initialization script not found: ${launcher.script}`,
       launcher.isNative
-        ? 'Make sure the AppImage was extracted alongside init-native.sh and biomolexplorer-src.tar.gz in the same folder.'
-        : 'Make sure the AppImage was extracted alongside init.sh and biomolexplorer.tar in the same folder.',
+        ? 'Make sure the AppImage was extracted alongside init-native.sh and neuropharma-src.tar.gz in the same folder.'
+        : 'Make sure the AppImage was extracted alongside init.sh and neuropharma.tar in the same folder.',
       `resolved basePath: ${basePath}\nprocess.execPath: ${process.execPath}\nprocess.env.APPIMAGE: ${process.env.APPIMAGE || '(not set)'}`
     );
     return;
@@ -327,7 +327,7 @@ function spawnLauncher(win, basePath, launcher, env) {
     motorLogs += log;
     process.stdout.write(`[engine:${channel}] ${log}`);
 
-    if (log.includes('BioMolExplorer ready')) {
+    if (log.includes('NeuroPharma ready')) {
       clearInterval(serverCheckInterval);
       appReady = true;
       if (!win.getURL().includes('localhost:3000')) {
@@ -364,7 +364,7 @@ function spawnLauncher(win, basePath, launcher, env) {
   });
 }
 
-ipcMain.handle('biomol:select-workspace-parent', async () => {
+ipcMain.handle('neuropharma:select-workspace-parent', async () => {
   const result = await dialog.showOpenDialog({
     title: 'Escolha onde salvar o workspace',
     properties: ['openDirectory', 'createDirectory'],
@@ -418,7 +418,7 @@ function showErrorScreen(win, title, hint, logs) {
     <body style="margin:0; padding:0; background-color:%23F4F6F8; font-family:'Segoe UI', Roboto, sans-serif;">
       <div style="background-color:%235b4382; color:white; padding: 15px 30px; display:flex; align-items:center;">
         <div style="font-size:26px; font-weight:500; display:flex; align-items:center;">
-          <span style="font-size:32px; margin-right: 12px;">⬡</span>BioMolExplorer
+          <span style="font-size:32px; margin-right: 12px;">⬡</span>NeuroPharma
         </div>
       </div>
       <div style="padding: 40px; max-width: 800px; margin: 0 auto;">
@@ -437,7 +437,7 @@ function showErrorScreen(win, title, hint, logs) {
 
         <div style="margin-top: 30px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
           <a href="${RETRY_URL}" style="background:%235b4382; color:white; text-decoration:none; padding:10px 24px; border-radius:6px; font-size:14px; font-weight:500;">Retry</a>
-          <p style="margin:0; color:%23999; font-size:13px;">Fixed the issue above? Click Retry. Otherwise, close this window and reopen BioMolExplorer.</p>
+          <p style="margin:0; color:%23999; font-size:13px;">Fixed the issue above? Click Retry. Otherwise, close this window and reopen NeuroPharma.</p>
         </div>
       </div>
     </body>`);

@@ -36,6 +36,7 @@ interface AuthContextValue {
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   setActiveWorkspace: (ws: Workspace) => void;
+  clearActiveWorkspace: () => void;
   /** Build fetch options with Authorization + X-Workspace headers. */
   authFetch: (url: string, options?: RequestInit) => Promise<Response>;
 }
@@ -46,9 +47,9 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-const TOKEN_KEY     = "biomol_token";
-const WORKSPACE_KEY = "biomol_workspace";
-const USER_KEY      = "biomol_user";
+const TOKEN_KEY     = "neuropharma_token";
+const WORKSPACE_KEY = "neuropharma_workspace";
+const USER_KEY      = "neuropharma_user";
 
 // Public routes that do NOT require authentication
 const PUBLIC_PATHS = new Set(["/login", "/setup", "/3d-demo"]);
@@ -191,9 +192,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setWorkspace(ws);
   }, []);
 
+  const clearActiveWorkspace = useCallback(() => {
+    localStorage.removeItem(WORKSPACE_KEY);
+    setWorkspace(null);
+  }, []);
+
   const value = useMemo<AuthContextValue>(
-    () => ({ user, workspace, token, isLoading, login, logout, setActiveWorkspace, authFetch }),
-    [user, workspace, token, isLoading, login, logout, setActiveWorkspace, authFetch]
+    () => ({ user, workspace, token, isLoading, login, logout, setActiveWorkspace, clearActiveWorkspace, authFetch }),
+    [user, workspace, token, isLoading, login, logout, setActiveWorkspace, clearActiveWorkspace, authFetch]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

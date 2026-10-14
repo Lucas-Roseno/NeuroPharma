@@ -1,4 +1,4 @@
-name: BioMolExplorer
+name: NeuroPharma
 channels:
   - conda-forge
   - defaults

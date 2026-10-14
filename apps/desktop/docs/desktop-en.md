@@ -1,6 +1,6 @@
-# BioMolExplorer - Desktop Environment & Distribution
+# NeuroPharma - Desktop Environment & Distribution
 
-This directory contains all the instructions to generate a distributable Desktop interface for BioMolExplorer end users.
+This directory contains all the instructions to generate a distributable Desktop interface for NeuroPharma end users.
 
 ---
 
@@ -8,8 +8,8 @@ This directory contains all the instructions to generate a distributable Desktop
 
 ```text
 desktop/
-├── BioMolExplorer-Launcher/        # Auxiliary files bundled inside the .deb
-│   ├── biomolexplorer-src.tar.gz   # Compressed source code (generated automatically)
+├── NeuroPharma-Launcher/        # Auxiliary files bundled inside the .deb
+│   ├── neuropharma-src.tar.gz   # Compressed source code (generated automatically)
 │   └── init-native.sh              # Native Engine for Linux/macOS (Conda + Node.js)
 │
 └── wrapper/                        # Electron executable source code
@@ -17,7 +17,7 @@ desktop/
     ├── package.json                # Dependencies and electron-builder configuration
     ├── assets/                     # Icons (.png for Linux, .icns for Mac)
     ├── scripts/
-    │   └── pack-source.js          # Generates biomolexplorer-src.tar.gz
+    │   └── pack-source.js          # Generates neuropharma-src.tar.gz
     └── dist/                       # electron-builder output (.deb, .dmg)
 ```
 
@@ -61,7 +61,7 @@ npm run build:linux-native
 
 Internally, `build:linux-native` runs:
 1. `npm run sync-version` → syncs the version with the root `package.json`
-2. `node scripts/pack-source.js` → generates `BioMolExplorer-Launcher/biomolexplorer-src.tar.gz`
+2. `node scripts/pack-source.js` → generates `NeuroPharma-Launcher/neuropharma-src.tar.gz`
 3. `electron-builder --linux deb` → compiles Electron and generates the `.deb` in `dist/`
 
 ---
@@ -69,13 +69,13 @@ Internally, `build:linux-native` runs:
 ### Package Output
 
 ```text
-wrapper/dist/biomolexplorer_amd64.deb   ← only artifact generated
+wrapper/dist/neuropharma_amd64.deb   ← only artifact generated
 ```
 
 The `.deb` already contains everything the user needs:
 - The Electron executable (graphical interface)
 - The `init-native.sh` (initialization engine)
-- The `biomolexplorer-src.tar.gz` (source code extracted on first run)
+- The `neuropharma-src.tar.gz` (source code extracted on first run)
 
 ---
 
@@ -84,7 +84,7 @@ The `.deb` already contains everything the user needs:
 After the build finishes, install the package with `apt`, which **automatically resolves the system dependencies** (`curl`, `psmisc`). Run this from the repository root:
 
 ```bash
-sudo apt install ./apps/desktop/wrapper/dist/biomolexplorer_amd64.deb
+sudo apt install ./apps/desktop/wrapper/dist/neuropharma_amd64.deb
 ```
 
 > Prefer `apt install ./file.deb` over `sudo dpkg -i file.deb` — `apt` pulls in missing dependencies on its own, whereas `dpkg -i` would require a separate `sudo apt-get install -f`.

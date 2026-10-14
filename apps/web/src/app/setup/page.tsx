@@ -53,8 +53,8 @@ export default function SetupPage() {
   return (
     <div className="container" style={{ maxWidth: "500px" }}>
       <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-        <img src="/img/icon.png" alt="BioMolExplorer Logo" style={{ width: "64px", height: "64px", marginBottom: "1rem" }} />
-        <h2 style={{ margin: 0, color: "var(--primary-color)" }}>Welcome to BioMolExplorer</h2>
+        <img src="/img/icon.png" alt="NeuroPharma Logo" style={{ width: "64px", height: "64px", marginBottom: "1rem" }} />
+        <h2 style={{ margin: 0, color: "var(--primary-color)" }}>Welcome to NeuroPharma</h2>
         <p style={{ color: "#666", marginTop: "0.5rem" }}>Create the initial administrator account to set up the platform.</p>
       </div>
 

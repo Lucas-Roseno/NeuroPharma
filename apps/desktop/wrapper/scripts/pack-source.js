@@ -1,9 +1,9 @@
 // =============================================================================
 //  pack-source.js
-//  Gera biomolexplorer-src.tar.gz a partir da raiz do projeto,
+//  Gera neuropharma-src.tar.gz a partir da raiz do projeto,
 //  excluindo arquivos desnecessários para distribuição.
 //
-//  Saída: apps/desktop/BioMolExplorer-Launcher/biomolexplorer-src.tar.gz
+//  Saída: apps/desktop/NeuroPharma-Launcher/neuropharma-src.tar.gz
 //
 //  Uso: node scripts/pack-source.js
 // =============================================================================
@@ -16,8 +16,8 @@ const fs = require('fs');
 const WRAPPER_DIR = path.resolve(__dirname, '..');
 const DESKTOP_DIR = path.resolve(WRAPPER_DIR, '..');
 const PROJECT_ROOT = path.resolve(DESKTOP_DIR, '..', '..');
-const LAUNCHER_DIR = path.join(DESKTOP_DIR, 'BioMolExplorer-Launcher');
-const OUTPUT_TAR = path.join(LAUNCHER_DIR, 'biomolexplorer-src.tar.gz');
+const LAUNCHER_DIR = path.join(DESKTOP_DIR, 'NeuroPharma-Launcher');
+const OUTPUT_TAR = path.join(LAUNCHER_DIR, 'neuropharma-src.tar.gz');
 // Published next to the tarball so the desktop app can verify its download.
 const OUTPUT_SHA = `${OUTPUT_TAR}.sha256`;
 

@@ -1,5 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('biomolDesktop', {
-  selectWorkspaceParent: () => ipcRenderer.invoke('biomol:select-workspace-parent'),
+contextBridge.exposeInMainWorld('neuropharmaDesktop', {
+  selectWorkspaceParent: () => ipcRenderer.invoke('neuropharma:select-workspace-parent'),
 });

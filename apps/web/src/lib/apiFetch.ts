@@ -8,8 +8,8 @@
 export function buildAuthHeaders(): Record<string, string> {
     if (typeof window === 'undefined') return {};
 
-    const token = localStorage.getItem('biomol_token');
-    const wsRaw = localStorage.getItem('biomol_workspace');
+    const token = localStorage.getItem('neuropharma_token');
+    const wsRaw = localStorage.getItem('neuropharma_workspace');
     const headers: Record<string, string> = {};
 
     if (token) headers['Authorization'] = `Bearer ${token}`;

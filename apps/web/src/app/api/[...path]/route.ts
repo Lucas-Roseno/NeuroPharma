@@ -9,9 +9,9 @@ async function proxyRequest(request: Request) {
     // This header is internal and must never be trusted from the browser.
     // Native filesystem dialogs are allowed only when the UI itself was
     // opened through a loopback address on the same machine.
-    headers.delete('x-biomol-local-client');
+    headers.delete('x-neuropharma-local-client');
     if (["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) {
-        headers.set('X-BioMol-Local-Client', '1');
+        headers.set('X-NeuroPharma-Local-Client', '1');
     }
 
     const init: RequestInit & { duplex?: "half" } = {
@@ -39,7 +39,7 @@ async function proxyRequest(request: Request) {
             headers: responseHeaders,
         });
     } catch (error: any) {
-        console.error(`[BioMolExplorer] Proxy error for ${targetUrl}:`, error.message);
+        console.error(`[NeuroPharma] Proxy error for ${targetUrl}:`, error.message);
 
         // Timeout — the operation may still be running in the background
         if (error.name === 'TimeoutError' || error.message?.includes('timeout') || error.message?.includes('aborted')) {

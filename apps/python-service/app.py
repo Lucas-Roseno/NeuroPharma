@@ -24,8 +24,8 @@ active_tasks = {}
 import ast
 
 # Michel's files
-BIOMOL_ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'BioMolExplorer'))
-sys.path.insert(0, os.path.join(BIOMOL_ROOT_PATH, 'src'))
+NEUROPHARMA_ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'NeuroPharma'))
+sys.path.insert(0, os.path.join(NEUROPHARMA_ROOT_PATH, 'src'))
 from wrappers.crawlers import load_pdb, load_chembl, load_zinc
 from crawlers.complex import PolymerEntityType, ExperimentalMethod
 from wrappers.molecular_analyzer import compute_similarity, analyze_graphs, generate_fingerprints
@@ -48,15 +48,15 @@ app.config['MAX_CONTENT_LENGTH'] = dataset_import_module.MAX_IMPORT_BYTES
 app.config['MAX_FORM_PARTS'] = dataset_import_module.MAX_IMPORT_FILES * 2 + 100
 app.config['MAX_FORM_MEMORY_SIZE'] = 8 * 1024 * 1024
 ActiveSubprocesses.register_signal_handlers()
-BIOMOL_ROOT_PATH = os.path.abspath(os.path.join(BASE_DIR, 'BioMolExplorer'))
-JSON_CRAWLERS_PATH = os.path.join(BIOMOL_ROOT_PATH, 'src', 'scripts', 'crawlers')
+NEUROPHARMA_ROOT_PATH = os.path.abspath(os.path.join(BASE_DIR, 'NeuroPharma'))
+JSON_CRAWLERS_PATH = os.path.join(NEUROPHARMA_ROOT_PATH, 'src', 'scripts', 'crawlers')
 
-# Legacy path constants — still used for BIOMOL library internals (e.g. crawlers).
+# Legacy path constants — still used for NEUROPHARMA library internals (e.g. crawlers).
 # All user-facing data paths now resolve through workspace_module.resolve_workspace_path().
-_LEGACY_PDB_PATH    = os.path.join(BIOMOL_ROOT_PATH, 'datasets', 'PDB')
-_LEGACY_CHEMBL_PATH = os.path.join(BIOMOL_ROOT_PATH, 'datasets', 'ChEMBL')
-_LEGACY_ZINC_PATH   = os.path.join(BIOMOL_ROOT_PATH, 'datasets', 'ZINC')
-_LEGACY_DRUGBANK    = os.path.join(BIOMOL_ROOT_PATH, 'datasets', 'ChEMBL', 'DrugBank')
+_LEGACY_PDB_PATH    = os.path.join(NEUROPHARMA_ROOT_PATH, 'datasets', 'PDB')
+_LEGACY_CHEMBL_PATH = os.path.join(NEUROPHARMA_ROOT_PATH, 'datasets', 'ChEMBL')
+_LEGACY_ZINC_PATH   = os.path.join(NEUROPHARMA_ROOT_PATH, 'datasets', 'ZINC')
+_LEGACY_DRUGBANK    = os.path.join(NEUROPHARMA_ROOT_PATH, 'datasets', 'ChEMBL', 'DrugBank')
 _LEGACY_ADMET       = os.path.join(_LEGACY_DRUGBANK, 'ADMET')
 
 # Initialize auth database on startup
@@ -146,7 +146,10 @@ def _get_workspace_path(sub: str | None = None) -> Path:
     if not user or not workspace_name:
         raise ValueError('An active workspace is required.')
     base = workspace_module.resolve_workspace_path(user['username'], workspace_name)
-
+    if sub and (sub == 'datasets' or sub.startswith('datasets/')):
+        datasets_path = workspace_module.resolve_workspace_datasets_path(user['username'], workspace_name)
+        remainder = sub.removeprefix('datasets').lstrip('/')
+        return datasets_path / remainder if remainder else datasets_path
     if sub:
         return base / sub
     return base
@@ -326,7 +329,7 @@ def workspaces_list():
     user = _get_user()
     workspaces = workspace_module.list_workspaces(user['username'])
     external_paths_enabled = os.environ.get(
-        'BIOMOL_ALLOW_EXTERNAL_WORKSPACES', ''
+        'NEUROPHARMA_ALLOW_EXTERNAL_WORKSPACES', ''
     ).lower() in {'1', 'true', 'yes'}
     return jsonify({
         'status': 'success',
@@ -345,7 +348,7 @@ def workspaces_create():
     try:
         storage_parent = data.get('storage_parent')
         external_paths_enabled = os.environ.get(
-            'BIOMOL_ALLOW_EXTERNAL_WORKSPACES', ''
+            'NEUROPHARMA_ALLOW_EXTERNAL_WORKSPACES', ''
         ).lower() in {'1', 'true', 'yes'}
         if storage_parent and not external_paths_enabled:
             raise ValueError(
@@ -367,6 +370,25 @@ def workspaces_delete(name: str):
         return jsonify({'status': 'success', 'message': f"Workspace '{name}' deleted."})
     except ValueError as e:
         return jsonify({'status': 'error', 'message': str(e)}), 404
+
+
+@app.route('/api/workspaces/<string:name>/attach-datasets', methods=['POST'])
+def workspaces_attach_datasets(name: str):
+    """Attach a local datasets directory to a workspace without copying it."""
+    external_paths_enabled = os.environ.get(
+        'NEUROPHARMA_ALLOW_EXTERNAL_WORKSPACES', ''
+    ).lower() in {'1', 'true', 'yes'}
+    local_client = request.headers.get('X-NeuroPharma-Local-Client') == '1'
+    if not external_paths_enabled or not local_client:
+        return jsonify({'status': 'error', 'message': 'Attaching datasets is available only in the local application.'}), 403
+    data = request.json or {}
+    try:
+        workspace = workspace_module.attach_datasets_path(
+            _get_user()['username'], name, str(data.get('datasets_path', '')),
+        )
+        return jsonify({'status': 'success', 'workspace': workspace})
+    except ValueError as exc:
+        return jsonify({'status': 'error', 'message': str(exc)}), 400
 
 
 @app.route('/api/workspaces/import-dataset', methods=['POST'])
@@ -521,15 +543,15 @@ def browse_filesystem():
 @app.route('/api/filesystem/native-picker', methods=['GET', 'POST'])
 def native_folder_picker():
     """
-    Open a native directory chooser on the local BioMolExplorer machine.
+    Open a native directory chooser on the local NeuroPharma machine.
 
     The route is intentionally unavailable to hosted or non-loopback clients:
     opening an OS dialog is a privileged local-desktop operation.
     """
     external_paths_enabled = os.environ.get(
-        'BIOMOL_ALLOW_EXTERNAL_WORKSPACES', ''
+        'NEUROPHARMA_ALLOW_EXTERNAL_WORKSPACES', ''
     ).lower() in {'1', 'true', 'yes'}
-    local_client = request.headers.get('X-BioMol-Local-Client') == '1'
+    local_client = request.headers.get('X-NeuroPharma-Local-Client') == '1'
     if not external_paths_enabled:
         return jsonify({
             'status': 'error',
@@ -550,12 +572,12 @@ def native_folder_picker():
         command = [
             'zenity', '--file-selection', '--directory',
             f'--filename={initial_dir}/',
-            '--title=Escolha onde criar o workspace — BioMolExplorer',
+            '--title=Escolha onde criar o workspace — NeuroPharma',
         ]
     elif shutil.which('kdialog'):
         command = [
             'kdialog', '--getexistingdirectory', initial_dir,
-            '--title', 'Escolha onde criar o workspace — BioMolExplorer',
+            '--title', 'Escolha onde criar o workspace — NeuroPharma',
         ]
     else:
         return jsonify({
@@ -587,7 +609,7 @@ def native_folder_picker():
 @app.route('/api/filesystem/validate-folder', methods=['POST'])
 def validate_folder_contents():
     """
-    Validates if a selected folder contains files compatible with the BioMolExplorer pipeline.
+    Validates if a selected folder contains files compatible with the NeuroPharma pipeline.
     folder_type can be:
       - 'prepared_receptor': expects .pdbqt files (directly or inside a /Prepared subdirectory)
       - 'molecules': expects .csv or .sdf files
@@ -1775,7 +1797,7 @@ def process_graphs():
 
     try:
         workspace_root = _get_workspace_path()
-        input_dir, metadata = prepare_inputs(workspace_root, target)
+        input_dir, metadata = prepare_inputs(workspace_root, target, _get_workspace_path('datasets'))
     except SimilarityInputError as exc:
         return jsonify({'success': False, 'code': 'input_unavailable', 'message': str(exc)}), 422
     except Exception:
@@ -2053,7 +2075,7 @@ def get_analysis_molecule_image():
 # Dictionary to store logs for each task
 task_logs = {}
 
-def redocking_worker(task_id, target, charge_type, prepare_complex, workspace_root, task_scope):
+def redocking_worker(task_id, target, charge_type, prepare_complex, workspace_root, datasets_root, task_scope):
     threading.current_thread().task_id = task_id
     import logging
     pass
@@ -2099,7 +2121,7 @@ def redocking_worker(task_id, target, charge_type, prepare_complex, workspace_ro
         handlers.append((l, h))
     
     results_path = os.path.join(workspace_root, 'resultados')
-    pdb_path = os.path.join(workspace_root, 'datasets', 'PDB')
+    pdb_path = os.path.join(datasets_root, 'PDB')
     out_dir = os.path.join(results_path, 'redocking', target.replace(' ', ''))
     in_dir = os.path.join(pdb_path, target.replace(' ', ''))
 
@@ -2249,6 +2271,7 @@ def run_redocking_task():
 
     task_id = str(uuid.uuid4())
     workspace_root = str(_get_workspace_path())
+    datasets_root = str(_get_workspace_path('datasets'))
     thread = threading.Thread(
         target=redocking_worker,
         args=(
@@ -2257,6 +2280,7 @@ def run_redocking_task():
             charge_type,
             prepare_complex,
             workspace_root,
+            datasets_root,
             {
                 '_owner': _get_user()['username'],
                 '_workspace': request.headers.get('X-Workspace', '').strip(),
@@ -2419,13 +2443,13 @@ def _load_raw_admet_group(paths: list[str]) -> pd.DataFrame:
     return pd.concat(frames, ignore_index=True).drop_duplicates(subset=['molecule_chembl_id'])
 
 
-def _ensure_admet_group_files(workspace_root: str, target: str) -> bool:
-    drugbank_path = os.path.join(workspace_root, 'datasets', 'ChEMBL', 'DrugBank')
+def _ensure_admet_group_files(datasets_root: str, target: str) -> bool:
+    drugbank_path = os.path.join(datasets_root, 'ChEMBL', 'DrugBank')
     os.makedirs(drugbank_path, exist_ok=True)
     if any(os.path.isfile(os.path.join(drugbank_path, f'{target}_{suffix}.csv'))
            for suffix in ('MOLS', 'SIMS', 'FULL')):
         return True
-    chembl_path = os.path.join(workspace_root, 'datasets', 'ChEMBL')
+    chembl_path = os.path.join(datasets_root, 'ChEMBL')
     mols = _load_raw_admet_group(_raw_admet_csvs(chembl_path, 'molecules', target))
     sims = _load_raw_admet_group(_raw_admet_csvs(chembl_path, 'similars', target))
     if mols.empty and sims.empty:
@@ -2450,9 +2474,9 @@ def _ensure_admet_group_files(workspace_root: str, target: str) -> bool:
     return True
 
 
-def _admet_available_targets(workspace_root: str) -> list[str]:
-    drugbank_path = os.path.join(workspace_root, 'datasets', 'ChEMBL', 'DrugBank')
-    chembl_path = os.path.join(workspace_root, 'datasets', 'ChEMBL')
+def _admet_available_targets(datasets_root: str) -> list[str]:
+    drugbank_path = os.path.join(datasets_root, 'ChEMBL', 'DrugBank')
+    chembl_path = os.path.join(datasets_root, 'ChEMBL')
     targets = set()
     if os.path.isdir(drugbank_path):
         for fname in os.listdir(drugbank_path):
@@ -2467,12 +2491,12 @@ def _admet_available_targets(workspace_root: str) -> list[str]:
                            if os.path.isdir(os.path.join(category_path, name)))
     available = []
     for target in sorted(targets):
-        if _ensure_admet_group_files(workspace_root, target):
+        if _ensure_admet_group_files(datasets_root, target):
             available.append(target)
     return available
 
 
-def admet_worker(task_id: str, target: str, workspace_root: str, input_file: str | None = None):
+def admet_worker(task_id: str, target: str, workspace_root: str, datasets_root: str, input_file: str | None = None):
     """Background worker that runs the ADMET pipeline for a given ChEMBL target.
 
     Reads the three consolidated DrugBank files:
@@ -2523,9 +2547,9 @@ def admet_worker(task_id: str, target: str, workspace_root: str, input_file: str
     try:
 
         # Convert imported raw ChEMBL molecule folders when needed.
-        drugbank_path = os.path.join(workspace_root, 'datasets', 'ChEMBL', 'DrugBank')
+        drugbank_path = os.path.join(datasets_root, 'ChEMBL', 'DrugBank')
         output_path = os.path.join(drugbank_path, 'ADMET')
-        _ensure_admet_group_files(workspace_root, target)
+        _ensure_admet_group_files(datasets_root, target)
         found_any = any(
             os.path.isfile(os.path.join(drugbank_path, f"{target}_{sfx}.csv"))
             for sfx in ('MOLS', 'SIMS', 'FULL')
@@ -2588,9 +2612,10 @@ def run_admet_task():
 
     task_id = str(uuid.uuid4())
     workspace_root = str(_get_workspace_path())
+    datasets_root = str(_get_workspace_path('datasets'))
     thread = threading.Thread(
         target=admet_worker,
-        args=(task_id, target, workspace_root, None),
+        args=(task_id, target, workspace_root, datasets_root, None),
     )
     thread.start()
 
@@ -2743,7 +2768,7 @@ def list_admet_available_targets():
     Lists targets eligible for ADMET analysis — those that have at least one
     DrugBank group file (_MOLS.csv / _SIMS.csv / _FULL.csv) in DRUGBANK_PATH().
     """
-    return jsonify(_admet_available_targets(str(_get_workspace_path())))
+    return jsonify(_admet_available_targets(str(_get_workspace_path('datasets'))))
 
 
 # ==========================================
@@ -2813,6 +2838,7 @@ def docking_worker(
     library: str,
     dock_kwargs: dict,
     workspace_root: str,
+    datasets_root: str,
     task_scope: dict,
 ):
     """
@@ -2919,7 +2945,7 @@ def docking_worker(
     try:
 
         # ── Paths (all absolute, portable) ────────────────────────────────────
-        base_input_path = os.path.join(workspace_root, 'datasets', 'PDB')
+        base_input_path = os.path.join(datasets_root, 'PDB')
 
         # Use the user-supplied base_selected_mols if provided, otherwise use the defaults
         custom_base_mols = dock_kwargs.pop('base_selected_mols', None)
@@ -3117,6 +3143,7 @@ def run_docking_task():
 
     task_id = str(uuid.uuid4())
     workspace_root = str(_get_workspace_path())
+    datasets_root = str(_get_workspace_path('datasets'))
     thread = threading.Thread(
         target=docking_worker,
         args=(
@@ -3126,6 +3153,7 @@ def run_docking_task():
             library,
             {**dock_kwargs, 'mol_filename': mol_filename, 'base_selected_mols': effective_base_mols},
             workspace_root,
+            datasets_root,
             {
                 '_owner': _get_user()['username'],
                 '_workspace': request.headers.get('X-Workspace', '').strip(),

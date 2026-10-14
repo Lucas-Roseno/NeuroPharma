@@ -19,7 +19,7 @@ helper_code = """
         return os.path.join(self.__path, path.lstrip('/'))
 """
 
-for fpath in glob.glob("BioMolExplorer/src/crawlers/*.py"):
+for fpath in glob.glob("NeuroPharma/src/crawlers/*.py"):
     with open(fpath, "r") as f:
         content = f.read()
     

@@ -55,7 +55,7 @@ const createApp = () => {
   return app;
 };
 
-describe('📁 BioMolExplorer File Handling', () => {
+describe('📁 NeuroPharma File Handling', () => {
   let app: any;
 
   beforeAll(() => {

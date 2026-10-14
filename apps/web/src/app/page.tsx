@@ -132,7 +132,7 @@ export default function Home() {
           <div className="guide-hero-badge">
             <i className="fas fa-microscope" /> Official Platform User Guide · v2.0
           </div>
-          <h2>Welcome to BioMolExplorer 2.0</h2>
+          <h2>Welcome to NeuroPharma 2.0</h2>
           <p>
             An integrated, full-stack scientific workbench designed for structural biology mining,
             small-molecule bioactivity curation, chemical space network analysis, and structure-based
@@ -500,7 +500,7 @@ export default function Home() {
                 <i className="fas fa-shield-alt" /> Automated File Cleanup
               </h5>
               <p>
-                When deleting datasets or records from tables, BioMolExplorer automatically removes underlying `.pdb`
+                When deleting datasets or records from tables, NeuroPharma automatically removes underlying `.pdb`
                 and `.sdf` files to keep your local workspace clean and synchronized.
               </p>
             </div>

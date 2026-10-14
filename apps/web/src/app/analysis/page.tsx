@@ -2586,7 +2586,7 @@ export default function AnalysisPage() {
   return (
     <>
       <Head>
-        <title>Analysis | BioMolExplorer</title>
+        <title>Analysis | NeuroPharma</title>
       </Head>
 
       <main className="container" style={{ maxWidth: '1400px', marginBottom: '40px' }}>

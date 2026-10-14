@@ -1,15 +1,15 @@
 <div align="center">
   <img src="https://img.shields.io/badge/Status-Em%20Andamento-yellow?style=for-the-badge" alt="Status" />
   <img src="https://img.shields.io/badge/Vers%C3%A3o-2.0-blue?style=for-the-badge" alt="Version" />
-  <a href="https://biomolexplorer.onrender.com" target="_blank">
-    <img src="https://img.shields.io/badge/🌐%20Live%20Demo-biomolexplorer.onrender.com-8A2BE2?style=for-the-badge" alt="Live Demo" />
+  <a href="https://lucas-roseno.github.io/NeuroPharma/" target="_blank">
+    <img src="https://img.shields.io/badge/🌐%20Project%20Page-NeuroPharma-8A2BE2?style=for-the-badge" alt="Project Page" />
   </a>
 </div>
 
 <br/>
 
 <div align="center">
-  <h1>🧬 BioMolExplorer 2.0</h1>
+  <h1>🧬 NeuroPharma 2.0</h1>
   <p>Uma interface computacional integrada de mineração, análise e visualização de dados biológicos estruturais e químicos, com foco na triagem de inibidores multi-alvo para doenças neurodegenerativas.</p>
 </div>
 
@@ -30,7 +30,7 @@
 
 O desenvolvimento e reposicionamento de fármacos para desordens neurodegenerativas, como a Doença de Alzheimer (AD), enfrentam barreiras formidáveis de custo e tempo, com baixíssimas taxas de aprovação (5–10%). A modelagem molecular assistida por computador (CADD) e a triagem virtual (HTVS) são alternativas robustas na otimização destas fases iniciais.
 
-O **BioMolExplorer** foi concebido como um módulo central do amplo projeto **NeuroPharmIA**. O objetivo primário é fornecer uma interface web amigável e de alta performance que automatize a extração, mineração e visualização de dados de importantes bases abertas (PDB, ChEMBL e ZINC). Focando na inibição de enzimas críticas como Acetilcolinesterase (AChE), Butirilcolinesterase (BChE) e Beta-secretase 1 (BACE1), o BioMolExplorer reduz significativamente as barreiras técnicas em bioinformática ao centralizar o fluxo de trabalho de um pesquisador.
+O **NeuroPharma** foi concebido como um módulo central do amplo projeto **NeuroPharmIA**. O objetivo primário é fornecer uma interface web amigável e de alta performance que automatize a extração, mineração e visualização de dados de importantes bases abertas (PDB, ChEMBL e ZINC). Focando na inibição de enzimas críticas como Acetilcolinesterase (AChE), Butirilcolinesterase (BChE) e Beta-secretase 1 (BACE1), o NeuroPharma reduz significativamente as barreiras técnicas em bioinformática ao centralizar o fluxo de trabalho de um pesquisador.
 
 ### 🌟 Destaques e Habilidades Envolvidas
 Esse projeto exigiu uma combinação plural e desafiadora de competências técnicas dos Desenvolvedores **Lucas Roseno** e **Pedro Dias**, consolidando um forte background no ecossistema de Engenharia de Software e Bioinformática:
@@ -43,7 +43,7 @@ Esse projeto exigiu uma combinação plural e desafiadora de competências técn
 - **DevOps Elementar**: Criação da orquestração unificada de todos os serviços (Web, API Node e Flask/Python) contidos dentro do padrão **Docker**, elevando drasticamente a portabilidade e permitindo deploy escalonável *one-click* com ambientes Anaconda simulados.
 
 ### 🤝 Colaboradores
-O BioMolExplorer foi originado na Iniciação Científica no **CEFET-MG** sob um esforço coletivo multidisciplinar:
+O NeuroPharma foi originado na Iniciação Científica no **CEFET-MG** sob um esforço coletivo multidisciplinar:
 - **Prof. Dr. Michel Pires da Silva** — Orientador / Idealizador do núcleo (NeuroPharmIA)
 - **Prof. Dr. Alex Gutterres Taranto** (UFSJ) — Orientador
 - **Prof. Dr. Alisson Marques da Silva** — Co-Orientador
@@ -65,7 +65,7 @@ A implementação em **Docker** empacotou com maestria dependências árduas de 
 A organização de pastas segue uma infraestrutura local amigável (*Monorepo*), onde serviços independentes conversam entre si.
 
 ```text
-BioMolExplorer/
+NeuroPharma/
 ├── apps/
 │   ├── web/               # ⚡ Front-end | Next.js 14, React, UI/UX Principal, RDKit Viewer
 │   ├── api/               # 🚦 Proxy Intermediador | Node.js, Mapeamento de rotas e segurança CORS
@@ -107,8 +107,8 @@ npm --version
 **Este passo é obrigatório para todas as opções abaixo.**
 
 ```bash
-git clone https://github.com/Lucas-Roseno/BioMolExplorer.git
-cd BioMolExplorer
+git clone https://github.com/Lucas-Roseno/NeuroPharma.git
+cd NeuroPharma
 ```
 
 ---
@@ -124,10 +124,10 @@ Esta opção **não exige Python, Conda ou nenhuma ferramenta científica instal
 docker --version
 
 # 1. Compile a imagem (pode demorar alguns minutos na primeira vez — baixa ~2 GB)
-docker build -t biomolexplorer .
+docker build -t neuropharma .
 
 # 2. Rode o container vinculando as portas dos 3 serviços
-docker run -p 3000:3000 -p 3001:3001 -p 5000:5000 biomolexplorer
+docker run -p 3000:3000 -p 3001:3001 -p 5000:5000 neuropharma
 ```
 
 Após a inicialização, acesse no navegador: **http://localhost:3000**
@@ -143,7 +143,7 @@ Após a inicialização, acesse no navegador: **http://localhost:3000**
 
 Ideal para quem quer modificar o código ou rodar o pipeline de **Redocking** localmente.
 
-> ⚠️ **UCSF Chimera (opcional, apenas para Redocking):** Baixe o instalador `.bin` manualmente em [rbvi.ucsf.edu/chimera](https://www.rbvi.ucsf.edu/chimera/download.html) e coloque-o em `apps/python-service/BioMolExplorer/apps/chimera.bin` **antes** de rodar o setup. O script irá avisá-lo se não encontrá-lo.
+> ⚠️ **UCSF Chimera (opcional, apenas para Redocking):** Baixe o instalador `.bin` manualmente em [rbvi.ucsf.edu/chimera](https://www.rbvi.ucsf.edu/chimera/download.html) e coloque-o em `apps/python-service/NeuroPharma/apps/chimera.bin` **antes** de rodar o setup. O script irá avisá-lo se não encontrá-lo.
 
 #### Um único comando instala tudo:
 
@@ -174,7 +174,7 @@ Acesse no navegador: **http://localhost:3000**
 
 ### Opção C) 🖥️ Aplicativo Desktop (Distribuição)
 
-Para usar o BioMolExplorer como um **executável instalável** (.AppImage no Linux, .exe no Windows, .dmg no macOS) — sem precisar abrir um terminal — consulte o guia completo:
+Para usar o NeuroPharma como um **executável instalável** (.AppImage no Linux, .exe no Windows, .dmg no macOS) — sem precisar abrir um terminal — consulte o guia completo:
 
 - 🇧🇷 [Documentação Desktop (PT-BR)](apps/desktop/desktop-ptbr.md)
 - 🇺🇸 [Desktop Documentation (EN)](apps/desktop/desktop-en.md)
@@ -182,8 +182,8 @@ Para usar o BioMolExplorer como um **executável instalável** (.AppImage no Lin
 > 🐧 **Ubuntu 22.04+:** Para rodar o `.AppImage` pode ser necessário:
 > ```bash
 > sudo apt install libfuse2
-> chmod +x BioMolExplorer.AppImage
-> ./BioMolExplorer.AppImage --no-sandbox
+> chmod +x NeuroPharma.AppImage
+> ./NeuroPharma.AppImage --no-sandbox
 > ```
 
 ---
@@ -197,14 +197,14 @@ Para usar o BioMolExplorer como um **executável instalável** (.AppImage no Lin
 | `ModuleNotFoundError: No module named 'pymol'` | `conda install -c conda-forge pymol-open-source` |
 | `Port 3000 already in use` | O script `start.sh` detecta e aloca automaticamente portas livres no seu ambiente |
 | `docker: command not found` | Instale o [Docker](https://www.docker.com/get-started/) |
-| `chimera.bin não encontrado` | Baixe em [rbvi.ucsf.edu/chimera](https://www.rbvi.ucsf.edu/chimera/download.html) e coloque em `apps/python-service/BioMolExplorer/apps/` |
+| `chimera.bin não encontrado` | Baixe em [rbvi.ucsf.edu/chimera](https://www.rbvi.ucsf.edu/chimera/download.html) e coloque em `apps/python-service/NeuroPharma/apps/` |
 | Erro CORS na web | Verifique se a API está rodando em `http://localhost:3001` |
 
 ---
 
 ## 🔮 5. Objetivos Futuros e Continuidade
 
-O **BioMolExplorer 2.0** faz parte da tese macro **NeuroPharmIA**. Este projeto é iterativo e continuará em vasta expansão.  
+O **NeuroPharma 2.0** faz parte da tese macro **NeuroPharmIA**. Este projeto é iterativo e continuará em vasta expansão.
 Para as próximas rodadas, espera-se agrupar na plataforma **Inteligências Artificiais e Redes Neurais** que consumam os bancos de moléculas pré-limpos em tempo real, realizando classificação, predições QSAR (*Quantitative Structure-Activity Relationship*) e priorização de candidatos de modo automático, fechando de ponta a ponta o ciclo *in silico* de seleção de inibidores contra Doenças Neurodegenerativas de forma interativa.
 
 ---

@@ -2,4 +2,4 @@ node_modules
 .next
 .git
 *.md
-apps/python-service/BioMolExplorer/datasets
+apps/python-service/NeuroPharma/datasets

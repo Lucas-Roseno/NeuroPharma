@@ -1,13 +1,13 @@
 {
-  "name": "biomol-explorer-workspace",
+  "name": "neuropharma-workspace",
   "version": "2.0.1",
   "private": true,
   "workspaces": [
     "apps/*"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev --workspace=api\" \"npm run dev --workspace=web\" \"cd apps/python-service && BIOMOL_ALLOW_EXTERNAL_WORKSPACES=1 python app.py\"",
-    "start": "concurrently \"npm run start --workspace=api\" \"npm run start --workspace=web\" \"cd apps/python-service && BIOMOL_ALLOW_EXTERNAL_WORKSPACES=1 python app.py\"",
+    "dev": "concurrently \"npm run dev --workspace=api\" \"npm run dev --workspace=web\" \"cd apps/python-service && NEUROPHARMA_ALLOW_EXTERNAL_WORKSPACES=1 python app.py\"",
+    "start": "concurrently \"npm run start --workspace=api\" \"npm run start --workspace=web\" \"cd apps/python-service && NEUROPHARMA_ALLOW_EXTERNAL_WORKSPACES=1 python app.py\"",
     "test": "npm run test --workspace=api && npm run test --workspace=web",
     "test:api": "npm run test --workspace=api",
     "test:web": "npm run test --workspace=web",

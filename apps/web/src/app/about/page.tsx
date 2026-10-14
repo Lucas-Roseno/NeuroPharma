@@ -4,7 +4,7 @@ export default function AboutPage() {
   return (
     <div className="container">
       <section className="team-section">
-        <h2 className="team-title">BioMolExplorer Team</h2>
+        <h2 className="team-title">NeuroPharma Team</h2>
 
         <ul className="team-grid">
           <li className="team-card">
@@ -81,7 +81,7 @@ export default function AboutPage() {
         <h2 className="team-title">Recommended Citation</h2>
         <div className="citation-box">
           <p>
-            PIRES DA SILVA, M.; ALVES DE OLIVEIRA, T.; HABIB BECHELANE MAIA, E.; OLIVEIRA MENDES, G.; CRISTINA MOREIRA DAMÁZIO, L.; BRITO BARBOSA, D.; ANDRADE LEITE, F. H.; FALKOSKI, L.; FLORES DE SOUZA MARRA, I.; SIQUEIRA VALLE, M.; SILVA MATOS ANDRADE, L.; ČMELO, I.; FAYNE, D.; BATISTA DE CARVALHO, P.; MARQUES DA SILVA, A.; GUTTERRES TARANTO, A.; ARAÚJO, L. R. M.; DIAS, P. H. P. <strong>Molecular Data Exploration for Intelligent Drug Discovery: BioMolExplorer v2.0</strong>. Mendeley Data, 2025. Available at: &lt;<a href="https://doi.org/10.17632/5njg46dfj4.3" target="_blank" rel="noopener noreferrer">https://doi.org/10.17632/5njg46dfj4.3</a>&gt;.
+            PIRES DA SILVA, M.; ALVES DE OLIVEIRA, T.; HABIB BECHELANE MAIA, E.; OLIVEIRA MENDES, G.; CRISTINA MOREIRA DAMÁZIO, L.; BRITO BARBOSA, D.; ANDRADE LEITE, F. H.; FALKOSKI, L.; FLORES DE SOUZA MARRA, I.; SIQUEIRA VALLE, M.; SILVA MATOS ANDRADE, L.; ČMELO, I.; FAYNE, D.; BATISTA DE CARVALHO, P.; MARQUES DA SILVA, A.; GUTTERRES TARANTO, A.; ARAÚJO, L. R. M.; DIAS, P. H. P. <strong>Dataset do projeto publicado no Mendeley Data</strong>, 2025. Available at: &lt;<a href="https://doi.org/10.17632/5njg46dfj4.3" target="_blank" rel="noopener noreferrer">https://doi.org/10.17632/5njg46dfj4.3</a>&gt;.
           </p>
         </div>
       </section>
