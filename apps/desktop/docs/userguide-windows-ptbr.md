@@ -1,4 +1,4 @@
-# BioMolExplorer — Guia do Usuário (Windows)
+# NeuroPharma — Guia do Usuário (Windows)
 
 > **O suporte a Windows ainda não está disponível.**
 >
@@ -10,9 +10,9 @@
 
 Quando o suporte a Windows for lançado, a instalação seguirá estas etapas:
 
-1. Baixe o instalador `BioMolExplorer-Setup.exe`.
+1. Baixe o instalador `NeuroPharma-Setup.exe`.
 2. Execute o instalador e siga as instruções na tela.
-3. Abra o **BioMolExplorer** pelo Menu Iniciar ou pelo atalho na área de trabalho.
+3. Abra o **NeuroPharma** pelo Menu Iniciar ou pelo atalho na área de trabalho.
 
 Na **primeira abertura**, o aplicativo irá configurar automaticamente o ambiente científico (Miniconda, Node.js, RDKit, OpenBabel, Vina, PyMOL, Flask) — nenhuma configuração manual é necessária.
 
@@ -20,9 +20,9 @@ Na **primeira abertura**, o aplicativo irá configurar automaticamente o ambient
 
 ## Enquanto Isso
 
-Se você precisar usar o BioMolExplorer agora, considere a seguinte alternativa:
+Se você precisar usar o NeuroPharma agora, considere a seguinte alternativa:
 
-- **Linux (recomendado):** Use uma instalação nativa de Linux ou uma máquina virtual com Ubuntu 20.04+. Instale o pacote com `sudo apt install ./biomolexplorer_amd64.deb` — veja o guia do usuário para Linux para mais detalhes.
+- **Linux (recomendado):** Use uma instalação nativa de Linux ou uma máquina virtual com Ubuntu 20.04+. Instale o pacote com `sudo apt install ./neuropharma_amd64.deb` — veja o guia do usuário para Linux para mais detalhes.
 
 ---
 

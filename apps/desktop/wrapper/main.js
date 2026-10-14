@@ -3,9 +3,9 @@ const { spawn, exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const VERSION_URL = 'https://raw.githubusercontent.com/Lucas-Roseno/BioMolExplorer/main/package.json';
+const VERSION_URL = 'https://raw.githubusercontent.com/Lucas-Roseno/NeuroPharma/main/package.json';
 
-// Resolves the base path where init-native.sh and biomolexplorer-src.tar.gz are located.
+// Resolves the base path where init-native.sh and neuropharma-src.tar.gz are located.
 // Linux AppImage exposes APPIMAGE; macOS uses process.execPath; dev uses process.cwd().
 function resolveBasePath() {
   if (process.env.APPIMAGE) {
@@ -32,7 +32,7 @@ function resolveLauncher(basePath) {
 
 async function checkForUpdates(win, currentVersion) {
   try {
-    const res = await fetch(VERSION_URL, { headers: { 'User-Agent': 'BioMolExplorer' } });
+    const res = await fetch(VERSION_URL, { headers: { 'User-Agent': 'NeuroPharma' } });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     const latest = data.version;
@@ -53,14 +53,14 @@ async function checkForUpdates(win, currentVersion) {
       const { response } = await dialog.showMessageBox(win, {
         type: 'info',
         title: 'Update Available',
-        message: `BioMolExplorer v${latest} is available`,
+        message: `NeuroPharma v${latest} is available`,
         detail: `You are currently running v${currentVersion}.\nWould you like to go to the download page?`,
         buttons: ['Download Update', 'Later'],
         defaultId: 0,
         cancelId: 1,
       });
       if (response === 0) {
-        shell.openExternal('https://biomolexplorer.github.io/download/');
+        shell.openExternal('https://github.com/Lucas-Roseno/NeuroPharma/releases/latest');
       }
     }
   } catch {
@@ -109,7 +109,7 @@ function createWindow() {
 
       <div style="background-color:%235b4382; color:white; padding: 15px 30px; display:flex; align-items:center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
         <div style="font-size:26px; font-weight:500; letter-spacing: 0.5px; display:flex; align-items:center;">
-          <span style="font-size:32px; margin-right: 12px; margin-bottom: 4px;">⬡</span>BioMolExplorer
+          <span style="font-size:32px; margin-right: 12px; margin-bottom: 4px;">⬡</span>NeuroPharma
         </div>
       </div>
 
@@ -145,8 +145,8 @@ function createWindow() {
     showErrorScreen(win,
       `Initialization script not found: ${launcher.script}`,
       launcher.isNative
-        ? 'Make sure the AppImage was extracted alongside init-native.sh and biomolexplorer-src.tar.gz in the same folder.'
-        : 'Make sure the AppImage was extracted alongside init.sh and biomolexplorer.tar in the same folder.',
+        ? 'Make sure the AppImage was extracted alongside init-native.sh and neuropharma-src.tar.gz in the same folder.'
+        : 'Make sure the AppImage was extracted alongside init.sh and neuropharma.tar in the same folder.',
       `resolved basePath: ${basePath}\nprocess.execPath: ${process.execPath}\nprocess.env.APPIMAGE: ${process.env.APPIMAGE || '(not set)'}`
     );
     return;
@@ -178,7 +178,7 @@ function createWindow() {
     motorLogs += log;
     process.stdout.write(`[engine:${channel}] ${log}`);
 
-    if (log.includes('BioMolExplorer ready')) {
+    if (log.includes('NeuroPharma ready')) {
       clearInterval(serverCheckInterval);
       appReady = true;
       if (!win.getURL().includes('localhost:3000')) {
@@ -215,7 +215,7 @@ function createWindow() {
   });
 }
 
-ipcMain.handle('biomol:select-workspace-parent', async () => {
+ipcMain.handle('neuropharma:select-workspace-parent', async () => {
   const result = await dialog.showOpenDialog({
     title: 'Escolha onde salvar o workspace',
     properties: ['openDirectory', 'createDirectory'],
@@ -230,7 +230,7 @@ function showErrorScreen(win, title, hint, logs) {
     <body style="margin:0; padding:0; background-color:%23F4F6F8; font-family:'Segoe UI', Roboto, sans-serif;">
       <div style="background-color:%235b4382; color:white; padding: 15px 30px; display:flex; align-items:center;">
         <div style="font-size:26px; font-weight:500; display:flex; align-items:center;">
-          <span style="font-size:32px; margin-right: 12px;">⬡</span>BioMolExplorer
+          <span style="font-size:32px; margin-right: 12px;">⬡</span>NeuroPharma
         </div>
       </div>
       <div style="padding: 40px; max-width: 800px; margin: 0 auto;">
@@ -247,7 +247,7 @@ function showErrorScreen(win, title, hint, logs) {
           <pre style="background:%23272822; color:%23f8f8f2; padding:15px; border-radius:6px; font-size:12px; max-height:300px; overflow:auto; margin-top:10px;">${escape(logs) || '(no logs available)'}</pre>
         </details>
 
-        <p style="margin-top: 30px; color:%23999; font-size:13px;">After resolving the issue, close this window and reopen BioMolExplorer.</p>
+        <p style="margin-top: 30px; color:%23999; font-size:13px;">After resolving the issue, close this window and reopen NeuroPharma.</p>
       </div>
     </body>`);
 }

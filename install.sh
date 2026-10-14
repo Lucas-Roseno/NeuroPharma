@@ -6,7 +6,7 @@ ANACONDA_URL="https://repo.anaconda.com/archive/Anaconda3-2024.10-1-Linux-x86_64
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INSTALL_DIR="$HOME/progs"
-CONDA_ENV_NAME="BioMolExplorer"
+CONDA_ENV_NAME="NeuroPharma"
 
 # Local installers
 ANACONDA_INSTALLER="${SCRIPT_DIR}/apps/Anaconda.sh"
@@ -121,7 +121,7 @@ install_dock6() {
     fi
 }
 
-echo "=== Iniciando Instalação do BioMolExplorer ==="
+echo "=== Iniciando Instalação do NeuroPharma ==="
 install_sys_deps
 install_npm_deps
 install_anaconda 

@@ -85,14 +85,14 @@ export default function Demo3DPage() {
 
       <section id="overview" className="relative z-10 flex min-h-screen flex-col overflow-hidden">
         <nav className="flex items-center justify-between px-6 py-6 md:px-10 md:py-7">
-          <Link href="#overview" className="flex items-center gap-3" aria-label="BioMolExplorer overview">
+          <Link href="#overview" className="flex items-center gap-3" aria-label="NeuroPharma overview">
             <span
               className="grid h-9 w-9 place-items-center rounded-full text-base font-bold text-white shadow-lg"
               style={{ background: "linear-gradient(135deg, #47366d, #9686de)", boxShadow: "0 0 20px rgba(150,134,222,0.3)" }}
             >
               B
             </span>
-            <span className="text-base font-semibold tracking-tight text-[#34274c]/90 md:text-lg">BioMolExplorer</span>
+            <span className="text-base font-semibold tracking-tight text-[#34274c]/90 md:text-lg">NeuroPharma</span>
           </Link>
 
           <div className="hidden items-center gap-7 md:flex">
@@ -134,7 +134,7 @@ export default function Demo3DPage() {
             </h1>
 
             <p data-hero-item className="max-w-xl text-base font-light leading-relaxed text-[#34274c]/70 md:text-lg">
-              BioMolExplorer connects biological targets, compound evidence, molecular docking and ADMET profiling to help researchers prioritize the next therapeutic hypothesis.
+              NeuroPharma connects biological targets, compound evidence, molecular docking and ADMET profiling to help researchers prioritize the next therapeutic hypothesis.
             </p>
 
             <div data-hero-item className="mt-9 flex flex-wrap items-center gap-4">
@@ -199,7 +199,7 @@ export default function Demo3DPage() {
               <span className="text-[#34274c]/68">Prioritize with purpose.</span>
             </h2>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-[#34274c]/70">
-              Neurodegenerative research requires a clear path from molecular data to an experimentally useful short list. BioMolExplorer keeps that path connected.
+              Neurodegenerative research requires a clear path from molecular data to an experimentally useful short list. NeuroPharma keeps that path connected.
             </p>
           </div>
 
@@ -234,7 +234,7 @@ export default function Demo3DPage() {
           >
             Sign in to your workspace →
           </Link>
-          <p className="mt-14 text-xs tracking-[0.16em] text-[#34274c]/40 uppercase">BioMolExplorer · molecular research workflow</p>
+          <p className="mt-14 text-xs tracking-[0.16em] text-[#34274c]/40 uppercase">NeuroPharma · molecular research workflow</p>
         </div>
       </section>
     </main>

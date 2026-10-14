@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "=== BioMolExplorer Development Server (Hot Reload) ==="
+echo "=== NeuroPharma Development Server (Hot Reload) ==="
 
 # Procurar Conda em locais comuns e no PATH
 for CONDA_DIR in "$HOME/progs/anaconda3" "$HOME/anaconda3" "$HOME/miniconda3" "/opt/anaconda3" "/usr/local/anaconda3"; do
@@ -27,12 +27,20 @@ if [ -z "$CONDA_BASE" ]; then
 fi
 
 source "$CONDA_BASE/etc/profile.d/conda.sh"
-conda activate BioMolExplorer
 
-# Função de limpeza para encerrar TODOS os serviços e processos do BioMolExplorer ao pressionar CTRL+C
+CONDA_ENV_NAME="NeuroPharma"
+if [ ! -d "$CONDA_BASE/envs/$CONDA_ENV_NAME" ]; then
+    echo "Erro: não foi encontrado um ambiente Conda para NeuroPharma."
+    echo "Crie-o com: conda env create -f requirements.yml"
+    exit 1
+fi
+
+conda activate "$CONDA_ENV_NAME"
+
+# Função de limpeza para encerrar TODOS os serviços e processos do NeuroPharma ao pressionar CTRL+C
 cleanup() {
     echo ""
-    echo "🛑 Encerrando todos os serviços e processos do BioMolExplorer..."
+    echo "🛑 Encerrando todos os serviços e processos do NeuroPharma..."
     
     # Encerra processos filhos iniciados por este script bash
     kill -TERM $(jobs -p) 2>/dev/null || true
@@ -124,9 +132,9 @@ echo "   - API (Maestro):  http://localhost:$API_PORT"
 echo "   - Python (Flask): http://127.0.0.1:$PYTHON_PORT"
 echo ""
 
-# Resolve o interpretador Python do ambiente conda BioMolExplorer (ou fallback para python3/python)
-if [ -x "$CONDA_BASE/envs/BioMolExplorer/bin/python" ]; then
-    PYTHON_BIN="$CONDA_BASE/envs/BioMolExplorer/bin/python"
+# Resolve o interpretador Python do ambiente Conda selecionado (ou fallback para python3/python)
+if [ -x "$CONDA_BASE/envs/$CONDA_ENV_NAME/bin/python" ]; then
+    PYTHON_BIN="$CONDA_BASE/envs/$CONDA_ENV_NAME/bin/python"
 elif command -v python3 >/dev/null 2>&1; then
     PYTHON_BIN="python3"
 else
@@ -134,7 +142,7 @@ else
 fi
 
 # 1. Inicia o Python Flask em background (já tem hot-reload via debug=True)
-BIOMOL_ALLOW_EXTERNAL_WORKSPACES=1 PORT=$PYTHON_PORT FLASK_PORT=$PYTHON_PORT "$PYTHON_BIN" apps/python-service/app.py &
+NEUROPHARMA_ALLOW_EXTERNAL_WORKSPACES=1 PORT=$PYTHON_PORT FLASK_PORT=$PYTHON_PORT "$PYTHON_BIN" apps/python-service/app.py &
 PYTHON_PID=$!
 
 # Configurar Node.js dinamicamente (NVM ou sistema)

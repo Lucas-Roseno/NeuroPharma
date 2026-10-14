@@ -20,8 +20,8 @@ export default function AuthHeader() {
 
   useEffect(() => {
     // Hydrate from localStorage on every client navigation
-    const userRaw = localStorage.getItem("biomol_user");
-    const wsRaw   = localStorage.getItem("biomol_workspace");
+    const userRaw = localStorage.getItem("neuropharma_user");
+    const wsRaw   = localStorage.getItem("neuropharma_workspace");
     if (!userRaw) {
       setSession(null);
       return;
@@ -38,7 +38,7 @@ export default function AuthHeader() {
   if (HIDDEN_PATHS.has(pathname) || !session) return null;
 
   const handleLogout = async () => {
-    const token = localStorage.getItem("biomol_token");
+    const token = localStorage.getItem("neuropharma_token");
     if (token) {
       await fetch("/api/auth/logout", {
         method: "POST",

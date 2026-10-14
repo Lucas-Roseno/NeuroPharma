@@ -1,7 +1,7 @@
 """
-workspace.py — BioMolExplorer Workspace Module
+workspace.py — NeuroPharma Workspace Module
 
-Manages per-user workspaces stored in ~/.biomolexplorer/users/<username>/workspaces/.
+Manages per-user workspaces stored in ~/.neuropharma/users/<username>/workspaces/.
 Each workspace is an isolated directory containing that user's datasets and results.
 """
 
@@ -12,7 +12,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 
-from auth import BIOMOL_DATA_DIR
+from auth import NEUROPHARMA_DATA_DIR
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -37,7 +37,7 @@ WORKSPACE_SUBDIRS = [
 # ---------------------------------------------------------------------------
 
 def _user_root(username: str) -> Path:
-    return BIOMOL_DATA_DIR / "users" / username
+    return NEUROPHARMA_DATA_DIR / "users" / username
 
 
 def _workspaces_root(username: str) -> Path:
@@ -273,7 +273,7 @@ def list_all_workspaces() -> list[dict]:
     """
     Return workspace info for ALL users.  Admin-only view — read only.
     """
-    users_root = BIOMOL_DATA_DIR / "users"
+    users_root = NEUROPHARMA_DATA_DIR / "users"
     if not users_root.exists():
         return []
 

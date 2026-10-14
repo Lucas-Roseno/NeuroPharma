@@ -1,8 +1,8 @@
 """
-auth.py — BioMolExplorer Authentication Module
+auth.py — NeuroPharma Authentication Module
 
 Handles user management (admin/regular users), password hashing with bcrypt,
-and session token lifecycle. All data is stored in ~/.biomolexplorer/auth.db
+and session token lifecycle. All data is stored in ~/.neuropharma/auth.db
 which is completely outside the repository and .deb package.
 """
 
@@ -18,8 +18,8 @@ from contextlib import contextmanager
 # Configuration
 # ---------------------------------------------------------------------------
 
-BIOMOL_DATA_DIR = Path.home() / ".biomolexplorer"
-AUTH_DB_PATH    = BIOMOL_DATA_DIR / "auth.db"
+NEUROPHARMA_DATA_DIR = Path.home() / ".neuropharma"
+AUTH_DB_PATH    = NEUROPHARMA_DATA_DIR / "auth.db"
 SESSION_TTL_HOURS = 24
 
 # ---------------------------------------------------------------------------
@@ -27,8 +27,8 @@ SESSION_TTL_HOURS = 24
 # ---------------------------------------------------------------------------
 
 def ensure_data_dir() -> None:
-    """Create ~/.biomolexplorer/ if it does not exist."""
-    BIOMOL_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    """Create ~/.neuropharma/ if it does not exist."""
+    NEUROPHARMA_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def get_db_connection() -> sqlite3.Connection:
@@ -193,7 +193,7 @@ def delete_user(target_user_id: int, requesting_user_id: int) -> None:
             raise ValueError("Cannot delete another administrator account.")
         conn.execute("DELETE FROM users WHERE id = ?", (target_user_id,))
 
-    # Filesystem cleanup: remove ~/.biomolexplorer/users/<username>/
+    # Filesystem cleanup: remove ~/.neuropharma/users/<username>/
     _delete_user_data_dir(dict(row)["username"])
 
 
@@ -329,7 +329,7 @@ def _delete_user_data_dir(username: str) -> None:
     # Import locally to avoid the auth <-> workspace module import cycle.
     import workspace as workspace_module
 
-    user_dir = BIOMOL_DATA_DIR / "users" / username
+    user_dir = NEUROPHARMA_DATA_DIR / "users" / username
     for registered in workspace_module.list_workspaces(username):
         try:
             workspace_module.delete_workspace(username, registered["name"])

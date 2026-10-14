@@ -1,4 +1,4 @@
-# BioMolExplorer — Guia do Usuário (Linux)
+# NeuroPharma — Guia do Usuário (Linux)
 
 ## Requisitos
 
@@ -12,7 +12,7 @@
 
 ### Opção 1 — Instalador gráfico (recomendado)
 
-1. Baixe o arquivo `biomolexplorer_amd64.deb`.
+1. Baixe o arquivo `neuropharma_amd64.deb`.
 2. Dê duplo-clique no arquivo para abri-lo no **App Center** (ou **Instalar Software**).
 3. Clique em **Instalar** e digite sua senha quando solicitado.
 
@@ -21,7 +21,7 @@
 Instale com o `apt` (recomendado — resolve as dependências automaticamente):
 
 ```bash
-sudo apt install ./biomolexplorer_amd64.deb
+sudo apt install ./neuropharma_amd64.deb
 ```
 
 > Execute o comando na pasta onde você baixou o arquivo. O `./` antes do nome é obrigatório para o `apt` tratá-lo como um arquivo local.
@@ -29,7 +29,7 @@ sudo apt install ./biomolexplorer_amd64.deb
 Alternativamente, com o `dpkg`:
 
 ```bash
-sudo dpkg -i biomolexplorer_amd64.deb
+sudo dpkg -i neuropharma_amd64.deb
 sudo apt-get install -f   # resolve dependências faltantes
 ```
 
@@ -37,10 +37,10 @@ sudo apt-get install -f   # resolve dependências faltantes
 
 ## Executando o Aplicativo
 
-Abra o **BioMolExplorer** pelo menu de aplicativos, ou pelo terminal:
+Abra o **NeuroPharma** pelo menu de aplicativos, ou pelo terminal:
 
 ```bash
-biomolexplorer
+neuropharma
 ```
 
 ---
@@ -51,14 +51,14 @@ Na **primeira abertura**, o aplicativo realiza automaticamente as seguintes etap
 
 | Etapa | Descrição | Tempo aproximado |
 |-------|-----------|-----------------|
-| 1 | Baixar e instalar o Miniconda em `~/.biomolexplorer/miniconda/` | 2–5 min |
-| 2 | Instalar o Node.js via NVM em `~/.biomolexplorer/nvm/` | 1–2 min |
+| 1 | Baixar e instalar o Miniconda em `~/.neuropharma/miniconda/` | 2–5 min |
+| 2 | Instalar o Node.js via NVM em `~/.neuropharma/nvm/` | 1–2 min |
 | 3 | Criar o ambiente Conda (RDKit, OpenBabel, Vina, PyMOL, Flask etc.) | 5–10 min |
 | 4 | Instalar as dependências JavaScript | 1–2 min |
 
 > **Tempo total da primeira execução: 5 a 15 minutos**, dependendo da sua conexão com a internet.
 
-Após a configuração, a interface do BioMolExplorer abrirá automaticamente na janela do aplicativo.
+Após a configuração, a interface do NeuroPharma abrirá automaticamente na janela do aplicativo.
 
 As execuções seguintes são rápidas — o launcher apenas inicia os serviços já instalados.
 
@@ -67,13 +67,13 @@ As execuções seguintes são rápidas — o launcher apenas inicia os serviços
 ## Desinstalação
 
 ```bash
-sudo dpkg -r biomolexplorer
+sudo dpkg -r neuropharma
 ```
 
 Para também remover o ambiente científico instalado no seu diretório pessoal:
 
 ```bash
-rm -rf ~/.biomolexplorer
+rm -rf ~/.neuropharma
 ```
 
 ---

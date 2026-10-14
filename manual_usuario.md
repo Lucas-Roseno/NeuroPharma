@@ -1,4 +1,4 @@
-# BioMolExplorer
+# NeuroPharma
 ## Manual do Usuário
 **Análise estrutural e descoberta de fármacos**
 
@@ -18,7 +18,7 @@ Michel Pires da Silva
 
 ## Guia de Instalação e Pré-requisitos
 
-Para utilizar o **BioMolExplorer**, é necessário primeiro instalar suas duas ferramentas de apoio (UCSF Chimera e Dock6) e, em seguida, o próprio aplicativo. 
+Para utilizar o **NeuroPharma**, é necessário primeiro instalar suas duas ferramentas de apoio (UCSF Chimera e Dock6) e, em seguida, o próprio aplicativo.
 
 > 💡 **Dica para iniciantes:** Durante a instalação, usaremos o **Terminal** do Linux. Para abri-lo, pressione as teclas `Ctrl` + `Alt` + `T` juntas. 
 > Para executar os comandos, basta copiar os textos dentro das caixas escuras (código), colar no seu terminal e apertar a tecla `Enter`. Quando o sistema pedir sua senha, digite-a e aperte `Enter` (é normal que a tela não mostre nenhum caractere enquanto você digita a senha).
@@ -29,7 +29,7 @@ Se preferir um guia visual, assista ao nosso [vídeo complementar de instalaçã
 
 ### 1. Instalação do UCSF Chimera
 
-O UCSF Chimera é utilizado pelo BioMolExplorer para processar as estruturas das moléculas e proteínas.
+O UCSF Chimera é utilizado pelo NeuroPharma para processar as estruturas das moléculas e proteínas.
 
 1. Faça o download do instalador do Chimera clicando neste [link oficial de downloads](https://www.rbvi.ucsf.edu/chimera/download.html) (escolha a versão para Linux que termina em `.bin`).
 2. Após terminar o download, vá até a sua pasta de Downloads e renomeie o arquivo baixado para apenas **`chimera.bin`** (isso facilitará os próximos passos).
@@ -47,7 +47,7 @@ O UCSF Chimera é utilizado pelo BioMolExplorer para processar as estruturas das
    ```
 6. O instalador fará algumas perguntas na tela de texto:
    - Toda vez que ele perguntar algo e parar, apenas pressione a tecla **Enter** para aceitar a opção padrão. 
-   - **Nota Importante:** Quando ele perguntar onde criar o link simbólico ("*Install symbolic link...*"), apertar **Enter** é fundamental. Isso garante que o BioMolExplorer encontre o Chimera automaticamente depois.
+   - **Nota Importante:** Quando ele perguntar onde criar o link simbólico ("*Install symbolic link...*"), apertar **Enter** é fundamental. Isso garante que o NeuroPharma encontre o Chimera automaticamente depois.
 
 ---
 
@@ -81,11 +81,11 @@ O Dock6 é o "motor" que fará os cálculos pesados de encaixe molecular (Dockin
 
 ---
 
-### 3. Instalação do BioMolExplorer
+### 3. Instalação do NeuroPharma
 
 Com as ferramentas de apoio prontas, agora é hora de instalar o aplicativo principal!
 
-Você já deve ter recebido o arquivo de instalação do BioMolExplorer (exemplo: `biomolexplorer_amd64.deb`).
+Você já deve ter recebido o arquivo de instalação do NeuroPharma (exemplo: `neuropharma_amd64.deb`).
 
 **Método 1: Interface Gráfica (Mais simples)**
 - Abra o seu gerenciador de arquivos e vá até a pasta onde está o arquivo `.deb`.
@@ -93,20 +93,20 @@ Você já deve ter recebido o arquivo de instalação do BioMolExplorer (exemplo
 - Clique no botão **"Instalar"** e digite sua senha.
 
 **Método 2: Pelo Terminal**
-- Salve o arquivo `.deb` na sua pasta de Downloads e renomeie-o para **`biomolexplorer.deb`**.
+- Salve o arquivo `.deb` na sua pasta de Downloads e renomeie-o para **`neuropharma.deb`**.
 - No terminal, digite os comandos:
   ```bash
   cd ~/Downloads
-  sudo dpkg -i biomolexplorer.deb
+  sudo dpkg -i neuropharma.deb
   ```
   *(Se aparecer algum erro de dependência, cole e rode o comando `sudo apt-get install -f` logo em seguida).*
 
-Pronto! Após a instalação, o **BioMolExplorer** estará disponível no menu de aplicativos do seu sistema, assim como qualquer outro programa.
+Pronto! Após a instalação, o **NeuroPharma** estará disponível no menu de aplicativos do seu sistema, assim como qualquer outro programa.
 ---
 
 ## 1 Introdução
 
-Bem-vindo ao **BioMolExplorer**.
+Bem-vindo ao **NeuroPharma**.
 
 Este manual apresenta, de forma clara e direta, as principais funcionalidades da plataforma. O guia acompanha o fluxo de uma pesquisa e foi elaborado para que usuários de diferentes áreas consigam utilizar as ferramentas de análise estrutural e descoberta de fármacos.
 
@@ -115,8 +115,8 @@ Este manual apresenta, de forma clara e direta, as principais funcionalidades da
 
 ## 2 Página Inicial (Home)
 
-![Página inicial do BioMolExplorer](prints/home1.png)
-*Figura 1: Página inicial do BioMolExplorer.*
+![Página inicial do NeuroPharma](prints/home1.png)
+*Figura 1: Página inicial do NeuroPharma.*
 
 A **Página Inicial** é o painel central da plataforma. Ela oferece uma visão geral das etapas sugeridas para conduzir a pesquisa.
 
@@ -271,7 +271,7 @@ Para uma análise completa, siga esta ordem:
 
 ---
 
-## Sobre os Autores (Equipe BioMolExplorer)
+## Sobre os Autores (Equipe NeuroPharma)
 
 **Alex Gutterres Taranto**  
 <img src="apps/web/public/img/team/alex.png" width="100" style="border-radius: 50%;" />  
@@ -307,4 +307,4 @@ E-mail: [pedro.dias@aluno.cefetmg.br](mailto:pedro.dias@aluno.cefetmg.br) | [Lat
 
 ## Citação Recomendada (Recommended Citation)
 
-PIRES DA SILVA, M.; ALVES DE OLIVEIRA, T.; HABIB BECHELANE MAIA, E.; OLIVEIRA MENDES, G.; CRISTINA MOREIRA DAMÁZIO, L.; BRITO BARBOSA, D.; ANDRADE LEITE, F. H.; FALKOSKI, L.; FLORES DE SOUZA MARRA, I.; SIQUEIRA VALLE, M.; SILVA MATOS ANDRADE, L.; ČMELO, I.; FAYNE, D.; BATISTA DE CARVALHO, P.; MARQUES DA SILVA, A.; GUTTERRES TARANTO, A.; ARAÚJO, L. R. M.; DIAS, P. H. P. **Molecular Data Exploration for Intelligent Drug Discovery: BioMolExplorer v2.0**. Mendeley Data, 2025. Available at: <https://doi.org/10.17632/5njg46dfj4.3>.
+PIRES DA SILVA, M.; ALVES DE OLIVEIRA, T.; HABIB BECHELANE MAIA, E.; OLIVEIRA MENDES, G.; CRISTINA MOREIRA DAMÁZIO, L.; BRITO BARBOSA, D.; ANDRADE LEITE, F. H.; FALKOSKI, L.; FLORES DE SOUZA MARRA, I.; SIQUEIRA VALLE, M.; SILVA MATOS ANDRADE, L.; ČMELO, I.; FAYNE, D.; BATISTA DE CARVALHO, P.; MARQUES DA SILVA, A.; GUTTERRES TARANTO, A.; ARAÚJO, L. R. M.; DIAS, P. H. P. **Molecular Data Exploration for Intelligent Drug Discovery: NeuroPharma v2.0**. Mendeley Data, 2025. Available at: <https://doi.org/10.17632/5njg46dfj4.3>.

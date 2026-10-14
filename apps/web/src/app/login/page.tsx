@@ -33,9 +33,9 @@ export default function LoginPage() {
       <Link className="login-back" href="/3d-demo">← Back to overview</Link>
 
       <section className="login-panel" aria-labelledby="login-title">
-        <Link className="login-brand" href="/3d-demo" aria-label="BioMolExplorer overview">
+        <Link className="login-brand" href="/3d-demo" aria-label="NeuroPharma overview">
           <span className="login-brand-mark" aria-hidden="true">B</span>
-          <span>BioMolExplorer</span>
+          <span>NeuroPharma</span>
         </Link>
 
         <p className="login-eyebrow">Research workspace</p>
@@ -78,7 +78,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="login-meta">Secure workspace access · BioMolExplorer</p>
+        <p className="login-meta">Secure workspace access · NeuroPharma</p>
       </section>
     </main>
   );

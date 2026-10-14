@@ -28,7 +28,7 @@ interface BondDef {
 }
 
 // Preserves the distinction between chemical elements while using colors with
-// enough contrast for the dark background and aligned with the BioMolExplorer palette.
+// enough contrast for the dark background and aligned with the NeuroPharma palette.
 const ELEMENT_COLORS: Record<string, Pick<AtomDef, "color" | "emissive">> = {
   C: { color: "#9686de", emissive: "#47366d" }, // lilac — project's primary color
   H: { color: "#eeeaff", emissive: "#705d9d" }, // white with a lavender tint

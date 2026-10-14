@@ -1,7 +1,7 @@
 {
-  "name": "biomolexplorer",
+  "name": "neuropharma",
   "version": "2.0.0",
-  "description": "Interface Desktop para o BioMolExplorer",
+  "description": "Interface Desktop para o NeuroPharma",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -10,8 +10,8 @@
     "build:mac-native": "npm install --no-workspaces && node scripts/pack-source.js && electron-builder --mac dmg && node scripts/pack-release.js mac-native"
   },
   "build": {
-    "appId": "com.onrender.biomolexplorer",
-    "productName": "BioMolExplorer",
+    "appId": "com.onrender.neuropharma",
+    "productName": "NeuroPharma",
     "directories": {
       "output": "dist"
     },
@@ -21,12 +21,12 @@
       "category": "Science",
       "extraFiles": [
         {
-          "from": "../BioMolExplorer-Launcher/init-native.sh",
+          "from": "../NeuroPharma-Launcher/init-native.sh",
           "to": "init-native.sh"
         },
         {
-          "from": "../BioMolExplorer-Launcher/biomolexplorer-src.tar.gz",
-          "to": "biomolexplorer-src.tar.gz"
+          "from": "../NeuroPharma-Launcher/neuropharma-src.tar.gz",
+          "to": "neuropharma-src.tar.gz"
         }
       ]
     },
@@ -36,16 +36,16 @@
         "psmisc"
       ],
       "maintainer": "Pedro Dias <pedro.dias@aluno.cefetmg.br>",
-      "artifactName": "biomolexplorer_amd64.deb"
+      "artifactName": "neuropharma_amd64.deb"
     },
     "mac": {
       "target": "dmg",
       "icon": "assets/icon.icns",
       "category": "public.app-category.education",
-      "artifactName": "BioMolExplorer.dmg"
+      "artifactName": "NeuroPharma.dmg"
     }
   },
-  "homepage": "https://biomolexplorer.onrender.com",
+  "homepage": "https://lucas-roseno.github.io/NeuroPharma/",
   "author": {
     "name": "Pedro Dias",
     "email": "pedro.dias@aluno.cefetmg.br"

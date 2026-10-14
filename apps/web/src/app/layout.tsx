@@ -11,7 +11,7 @@ import ConditionalLayoutElement from "../components/ConditionalLayoutElement";
 import { AuthProvider } from "../components/AuthProvider";
 
 export const metadata: Metadata = {
-  title: "BioMolExplorer",
+  title: "NeuroPharma",
   description: "Advanced Molecular Exploration",
   icons: {
     icon: "/img/icon.png",
@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <img src="/img/icon.png" alt="Logo" className="header-logo" />
                   </Link>
                   <Link href="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}>
-                    <h1>BioMolExplorer</h1>
+                    <h1>NeuroPharma</h1>
                   </Link>
                   {/* Auth-aware session indicator (workspace + user + logout) */}
                   <AuthHeader />
@@ -61,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <div className="footer-inner">
                   <div className="footer-left">
                     <Link href="/references" style={{ color: 'inherit', textDecoration: 'none', fontWeight: 'bold' }}>
-                      BioMolExplorer
+                      NeuroPharma
                     </Link> · Version 2.0
                   </div>
                   <nav className="footer-links">
@@ -69,7 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <Link href="/references">References</Link>
                     <Link href="/contact">Contact</Link>
                   </nav>
-                  <div className="footer-right">Copyright © 2024 BioMolExplorer. All Rights Reserved.</div>
+                  <div className="footer-right">Copyright © 2024 NeuroPharma. All Rights Reserved.</div>
                 </div>
               </footer>
             </ConditionalLayoutElement>

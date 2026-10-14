@@ -13,7 +13,7 @@ export default function ContactPage() {
     <div className="container">
       <div className="welcome-section">
         <h2 className="page-title">Contact Us</h2>
-        <p>Feel free to reach out to our team members for any inquiries regarding the BioMolExplorer project.</p>
+        <p>Feel free to reach out to our team members for any inquiries regarding the NeuroPharma project.</p>
       </div>
 
       <div style={{ maxWidth: '600px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>

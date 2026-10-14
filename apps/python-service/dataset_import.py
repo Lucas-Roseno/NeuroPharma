@@ -1,4 +1,4 @@
-"""Secure, transactional import of BioMolExplorer dataset directories.
+"""Secure, transactional import of NeuroPharma dataset directories.
 
 The browser uploads individual files together with their paths relative to the
 selected ``datasets`` directory.  This module validates the complete manifest
@@ -20,10 +20,10 @@ from pathlib import Path, PurePosixPath
 from typing import BinaryIO, Iterable, Sequence
 
 
-MAX_IMPORT_FILES = int(os.environ.get("BIOMOL_DATASET_IMPORT_MAX_FILES", "25000"))
+MAX_IMPORT_FILES = int(os.environ.get("NEUROPHARMA_DATASET_IMPORT_MAX_FILES", "25000"))
 _DEFAULT_MAX_IMPORT_BYTES = 10 * 1024**3
 _configured_max_import_bytes = int(
-    os.environ.get("BIOMOL_DATASET_IMPORT_MAX_BYTES", str(_DEFAULT_MAX_IMPORT_BYTES))
+    os.environ.get("NEUROPHARMA_DATASET_IMPORT_MAX_BYTES", str(_DEFAULT_MAX_IMPORT_BYTES))
 )
 # Non-positive values are never valid request limits. Treat them as unset so a
 # stale local environment cannot make every body-bearing request return 413.
@@ -33,7 +33,7 @@ MAX_IMPORT_BYTES = (
     else _DEFAULT_MAX_IMPORT_BYTES
 )
 MAX_FILE_BYTES = int(
-    os.environ.get("BIOMOL_DATASET_IMPORT_MAX_FILE_BYTES", str(512 * 1024**2))
+    os.environ.get("NEUROPHARMA_DATASET_IMPORT_MAX_FILE_BYTES", str(512 * 1024**2))
 )
 MAX_PATH_LENGTH = 512
 MAX_SEGMENT_LENGTH = 128

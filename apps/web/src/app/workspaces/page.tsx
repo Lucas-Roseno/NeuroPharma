@@ -18,7 +18,7 @@ interface Workspace {
 
 declare global {
   interface Window {
-    biomolDesktop?: {
+    neuropharmaDesktop?: {
       selectWorkspaceParent: () => Promise<string | null>;
     };
   }
@@ -145,8 +145,8 @@ export default function WorkspacesPage() {
     setDatasetUploadError("");
     setSelectingDatasetFolder(true);
     try {
-      if (window.biomolDesktop) {
-        const selected = await window.biomolDesktop.selectWorkspaceParent();
+      if (window.neuropharmaDesktop) {
+        const selected = await window.neuropharmaDesktop.selectWorkspaceParent();
         if (selected) setDatasetPath(selected);
         return;
       }
@@ -217,8 +217,8 @@ export default function WorkspacesPage() {
     setCreateError("");
     setSelectingFolder(true);
     try {
-      if (window.biomolDesktop) {
-        const selected = await window.biomolDesktop.selectWorkspaceParent();
+      if (window.neuropharmaDesktop) {
+        const selected = await window.neuropharmaDesktop.selectWorkspaceParent();
         if (selected) setNewWsParent(selected);
         return;
       }
@@ -308,7 +308,7 @@ export default function WorkspacesPage() {
               <Image src="/img/icon.png" alt="" width={42} height={42} priority />
             </div>
             <div>
-              <span className="workspaces-product">BioMolExplorer</span>
+              <span className="workspaces-product">NeuroPharma</span>
               <h1>Workspaces</h1>
               <p>Select a workspace to continue your research.</p>
             </div>

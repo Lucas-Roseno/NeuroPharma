@@ -24,8 +24,8 @@ active_tasks = {}
 import ast
 
 # Michel's files
-BIOMOL_ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'BioMolExplorer'))
-sys.path.insert(0, os.path.join(BIOMOL_ROOT_PATH, 'src'))
+NEUROPHARMA_ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'NeuroPharma'))
+sys.path.insert(0, os.path.join(NEUROPHARMA_ROOT_PATH, 'src'))
 from wrappers.crawlers import load_pdb, load_chembl, load_zinc
 from crawlers.complex import PolymerEntityType, ExperimentalMethod
 from wrappers.molecular_analyzer import compute_similarity, analyze_graphs, generate_fingerprints
@@ -48,15 +48,15 @@ app.config['MAX_CONTENT_LENGTH'] = dataset_import_module.MAX_IMPORT_BYTES
 app.config['MAX_FORM_PARTS'] = dataset_import_module.MAX_IMPORT_FILES * 2 + 100
 app.config['MAX_FORM_MEMORY_SIZE'] = 8 * 1024 * 1024
 ActiveSubprocesses.register_signal_handlers()
-BIOMOL_ROOT_PATH = os.path.abspath(os.path.join(BASE_DIR, 'BioMolExplorer'))
-JSON_CRAWLERS_PATH = os.path.join(BIOMOL_ROOT_PATH, 'src', 'scripts', 'crawlers')
+NEUROPHARMA_ROOT_PATH = os.path.abspath(os.path.join(BASE_DIR, 'NeuroPharma'))
+JSON_CRAWLERS_PATH = os.path.join(NEUROPHARMA_ROOT_PATH, 'src', 'scripts', 'crawlers')
 
-# Legacy path constants — still used for BIOMOL library internals (e.g. crawlers).
+# Legacy path constants — still used for NEUROPHARMA library internals (e.g. crawlers).
 # All user-facing data paths now resolve through workspace_module.resolve_workspace_path().
-_LEGACY_PDB_PATH    = os.path.join(BIOMOL_ROOT_PATH, 'datasets', 'PDB')
-_LEGACY_CHEMBL_PATH = os.path.join(BIOMOL_ROOT_PATH, 'datasets', 'ChEMBL')
-_LEGACY_ZINC_PATH   = os.path.join(BIOMOL_ROOT_PATH, 'datasets', 'ZINC')
-_LEGACY_DRUGBANK    = os.path.join(BIOMOL_ROOT_PATH, 'datasets', 'ChEMBL', 'DrugBank')
+_LEGACY_PDB_PATH    = os.path.join(NEUROPHARMA_ROOT_PATH, 'datasets', 'PDB')
+_LEGACY_CHEMBL_PATH = os.path.join(NEUROPHARMA_ROOT_PATH, 'datasets', 'ChEMBL')
+_LEGACY_ZINC_PATH   = os.path.join(NEUROPHARMA_ROOT_PATH, 'datasets', 'ZINC')
+_LEGACY_DRUGBANK    = os.path.join(NEUROPHARMA_ROOT_PATH, 'datasets', 'ChEMBL', 'DrugBank')
 _LEGACY_ADMET       = os.path.join(_LEGACY_DRUGBANK, 'ADMET')
 
 # Initialize auth database on startup
@@ -329,7 +329,7 @@ def workspaces_list():
     user = _get_user()
     workspaces = workspace_module.list_workspaces(user['username'])
     external_paths_enabled = os.environ.get(
-        'BIOMOL_ALLOW_EXTERNAL_WORKSPACES', ''
+        'NEUROPHARMA_ALLOW_EXTERNAL_WORKSPACES', ''
     ).lower() in {'1', 'true', 'yes'}
     return jsonify({
         'status': 'success',
@@ -348,7 +348,7 @@ def workspaces_create():
     try:
         storage_parent = data.get('storage_parent')
         external_paths_enabled = os.environ.get(
-            'BIOMOL_ALLOW_EXTERNAL_WORKSPACES', ''
+            'NEUROPHARMA_ALLOW_EXTERNAL_WORKSPACES', ''
         ).lower() in {'1', 'true', 'yes'}
         if storage_parent and not external_paths_enabled:
             raise ValueError(
@@ -376,9 +376,9 @@ def workspaces_delete(name: str):
 def workspaces_attach_datasets(name: str):
     """Attach a local datasets directory to a workspace without copying it."""
     external_paths_enabled = os.environ.get(
-        'BIOMOL_ALLOW_EXTERNAL_WORKSPACES', ''
+        'NEUROPHARMA_ALLOW_EXTERNAL_WORKSPACES', ''
     ).lower() in {'1', 'true', 'yes'}
-    local_client = request.headers.get('X-BioMol-Local-Client') == '1'
+    local_client = request.headers.get('X-NeuroPharma-Local-Client') == '1'
     if not external_paths_enabled or not local_client:
         return jsonify({'status': 'error', 'message': 'Attaching datasets is available only in the local application.'}), 403
     data = request.json or {}
@@ -543,15 +543,15 @@ def browse_filesystem():
 @app.route('/api/filesystem/native-picker', methods=['GET', 'POST'])
 def native_folder_picker():
     """
-    Open a native directory chooser on the local BioMolExplorer machine.
+    Open a native directory chooser on the local NeuroPharma machine.
 
     The route is intentionally unavailable to hosted or non-loopback clients:
     opening an OS dialog is a privileged local-desktop operation.
     """
     external_paths_enabled = os.environ.get(
-        'BIOMOL_ALLOW_EXTERNAL_WORKSPACES', ''
+        'NEUROPHARMA_ALLOW_EXTERNAL_WORKSPACES', ''
     ).lower() in {'1', 'true', 'yes'}
-    local_client = request.headers.get('X-BioMol-Local-Client') == '1'
+    local_client = request.headers.get('X-NeuroPharma-Local-Client') == '1'
     if not external_paths_enabled:
         return jsonify({
             'status': 'error',
@@ -572,12 +572,12 @@ def native_folder_picker():
         command = [
             'zenity', '--file-selection', '--directory',
             f'--filename={initial_dir}/',
-            '--title=Escolha onde criar o workspace — BioMolExplorer',
+            '--title=Escolha onde criar o workspace — NeuroPharma',
         ]
     elif shutil.which('kdialog'):
         command = [
             'kdialog', '--getexistingdirectory', initial_dir,
-            '--title', 'Escolha onde criar o workspace — BioMolExplorer',
+            '--title', 'Escolha onde criar o workspace — NeuroPharma',
         ]
     else:
         return jsonify({
@@ -609,7 +609,7 @@ def native_folder_picker():
 @app.route('/api/filesystem/validate-folder', methods=['POST'])
 def validate_folder_contents():
     """
-    Validates if a selected folder contains files compatible with the BioMolExplorer pipeline.
+    Validates if a selected folder contains files compatible with the NeuroPharma pipeline.
     folder_type can be:
       - 'prepared_receptor': expects .pdbqt files (directly or inside a /Prepared subdirectory)
       - 'molecules': expects .csv or .sdf files

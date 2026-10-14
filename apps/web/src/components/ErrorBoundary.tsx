@@ -22,7 +22,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     // Log internally, never expose to the user
-    console.error("[BioMolExplorer] Unhandled render error:", error, info);
+    console.error("[NeuroPharma] Unhandled render error:", error, info);
   }
 
   handleReload() {

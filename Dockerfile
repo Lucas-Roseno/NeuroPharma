@@ -36,7 +36,7 @@ WORKDIR /app
 COPY --from=builder /app /app/
 
 # Configura o ambiente Conda para o Python Service
-RUN conda env create -f apps/python-service/BioMolExplorer/requirements.yml && \
+RUN conda env create -f apps/python-service/NeuroPharma/requirements.yml && \
     conda clean -a -y
 
 # Dá permissão ao script de inicialização

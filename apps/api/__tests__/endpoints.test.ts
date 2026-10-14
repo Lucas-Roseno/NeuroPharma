@@ -68,7 +68,7 @@ const createApp = () => {
   return app;
 };
 
-describe('🧬 BioMolExplorer API Endpoints', () => {
+describe('🧬 NeuroPharma API Endpoints', () => {
   let app: any;
 
   beforeAll(() => {

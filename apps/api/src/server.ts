@@ -18,11 +18,11 @@ app.use(express.json());
 app.use((req, res, next) => {
   const auth = req.headers['authorization'];
   const ws   = req.headers['x-workspace'];
-  const localClient = req.headers['x-biomol-local-client'];
+  const localClient = req.headers['x-neuropharma-local-client'];
   res.locals.authHeaders = {
     ...(auth ? { Authorization: auth as string } : {}),
     ...(ws   ? { 'X-Workspace': ws as string }  : {}),
-    ...(localClient === '1' ? { 'X-BioMol-Local-Client': '1' } : {}),
+    ...(localClient === '1' ? { 'X-NeuroPharma-Local-Client': '1' } : {}),
   };
   next();
 });
@@ -637,12 +637,12 @@ app.get('/api/filesystem/browse', async (req, res) => {
 app.all('/api/filesystem/native-picker', async (req, res) => {
   try {
     const initialDir = req.query.initial_dir ? `?initial_dir=${encodeURIComponent(req.query.initial_dir.toString())}` : '';
-    const localClient = req.headers['x-biomol-local-client'];
+    const localClient = req.headers['x-neuropharma-local-client'];
     const response = await fetch(`${PYTHON_URL}/api/filesystem/native-picker${initialDir}`, {
       method: req.method,
       headers: {
         ...res.locals.authHeaders,
-        ...(localClient === '1' ? { 'X-BioMol-Local-Client': '1' } : {}),
+        ...(localClient === '1' ? { 'X-NeuroPharma-Local-Client': '1' } : {}),
       },
     });
     const data = await response.json();
@@ -870,7 +870,7 @@ app.get('/api/files/pdb_content/:target/:file', async (req, res) => {
 // would duplicate every file and make this gateway a memory/disk bottleneck.
 app.post('/api/workspaces/import-dataset', async (req, res) => {
   const contentType = req.headers['content-type'] || '';
-  const configuredMaxImportBytes = Number(process.env.BIOMOL_DATASET_IMPORT_MAX_BYTES);
+  const configuredMaxImportBytes = Number(process.env.NEUROPHARMA_DATASET_IMPORT_MAX_BYTES);
   const maxImportBytes = Number.isFinite(configuredMaxImportBytes) && configuredMaxImportBytes > 0
     ? configuredMaxImportBytes
     : 10 * 1024 ** 3;
