@@ -5,7 +5,9 @@
 # =============================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SRC_TAR="$SCRIPT_DIR/biomolexplorer-src.tar.gz"
+# BMX_SRC_TAR is set by the desktop app after it downloads and verifies a newer
+# package; otherwise the package bundled in the .deb is used.
+SRC_TAR="${BMX_SRC_TAR:-$SCRIPT_DIR/biomolexplorer-src.tar.gz}"
 
 # Electron does not load ~/.bashrc, so common directories are injected into PATH.
 _prepend_path() { case ":$PATH:" in *":$1:"*) ;; *) export PATH="$1:$PATH" ;; esac; }
@@ -109,8 +111,13 @@ _bundled_version() {
     | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/'
 }
 
+# True iff version $1 is strictly older than $2 (dotted numbers: 2.0.1 < 2.0.10).
+_version_lt() {
+  [ "$1" != "$2" ] && [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | head -1)" = "$1" ]
+}
+
 extract_source() {
-  local installed_id="" bundled_id="" ver=""
+  local installed_id="" bundled_id="" ver="" installed_ver=""
   [ -f "$APP_DIR/.buildid" ] && installed_id=$(cat "$APP_DIR/.buildid" 2>/dev/null)
   bundled_id=$(_bundled_id) || bundled_id=""
   ver=$(_bundled_version) || ver=""
@@ -136,6 +143,14 @@ extract_source() {
   # Same build already installed: nothing to do.
   if [ -n "$bundled_id" ] && [ "$installed_id" = "$bundled_id" ]; then
     ok "Installation up to date at $APP_DIR${ver:+ (v$ver)}"
+    return
+  fi
+
+  # Never downgrade: a package older than the installed code (e.g. a .deb reinstalled
+  # after the app already updated itself) must not overwrite it.
+  [ -f "$APP_DIR/.version" ] && installed_ver=$(cat "$APP_DIR/.version" 2>/dev/null)
+  if [ -n "$installed_ver" ] && [ -n "$ver" ] && _version_lt "$ver" "$installed_ver"; then
+    ok "Installed v$installed_ver is newer than the packaged v$ver. Keeping it."
     return
   fi
 

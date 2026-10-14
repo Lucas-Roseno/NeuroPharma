@@ -1,10 +1,20 @@
 const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
 const { spawn, exec } = require('child_process');
+const crypto = require('crypto');
+const os = require('os');
 const path = require('path');
 const fs = require('fs');
 
 const RELEASES_API_URL = 'https://api.github.com/repos/Lucas-Roseno/BioMolExplorer/releases/latest';
 const RELEASES_PAGE_URL = 'https://github.com/Lucas-Roseno/BioMolExplorer/releases';
+
+// Same location init-native.sh installs into ($HOME/.biomolexplorer).
+const INSTALL_DIR = path.join(os.homedir(), '.biomolexplorer');
+// Release assets needed for an automatic update (see pack-source.js).
+const SRC_ASSET = 'biomolexplorer-src.tar.gz';
+const SHA_ASSET = 'biomolexplorer-src.tar.gz.sha256';
+const UPDATE_TIMEOUT_MS = 5000;
+const DOWNLOAD_TIMEOUT_MS = 300000;
 
 // Fake scheme used by the "Retry" button on the error screen. Never actually
 // navigated to — intercepted and re-run in-process by the will-navigate handler
@@ -36,49 +46,144 @@ function resolveLauncher(basePath) {
   };
 }
 
+// Installed version as written by init-native.sh. Falls back to the .deb version
+// until the first extraction has run.
+function readInstalledVersion(fallback) {
+  try {
+    return fs.readFileSync(path.join(INSTALL_DIR, 'app', '.version'), 'utf8').trim() || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+// Compares dotted versions ("2.0.1"). Returns >0 if a is newer, <0 if older, 0 if equal.
+function compareVersions(a, b) {
+  const pa = a.split('.').map((n) => parseInt(n, 10) || 0);
+  const pb = b.split('.').map((n) => parseInt(n, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const diff = (pa[i] || 0) - (pb[i] || 0);
+    if (diff !== 0) return diff;
+  }
+  return 0;
+}
+
+function setBadge(win, text, color = '%23aaaaaa') {
+  win.webContents.executeJavaScript(`
+    var el = document.getElementById('version-badge');
+    if (el) { el.textContent = ${JSON.stringify(text)}; el.style.color = '${color}'; }
+  `).catch(() => {});
+}
+
+// Asks GitHub for the latest release. If it is newer than the installed build, asks
+// the user whether to update now. Resolves to the update to apply, or null.
 async function checkForUpdates(win, currentVersion) {
+  let data;
   try {
     const res = await fetch(RELEASES_API_URL, {
       headers: { 'User-Agent': 'BioMolExplorer', Accept: 'application/vnd.github+json' },
+      signal: AbortSignal.timeout(UPDATE_TIMEOUT_MS),
     });
     // 404 means the repo has no published release yet — treat like any other
     // "can't check right now" case rather than surfacing it to the user.
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const latest = String(data.tag_name || '').replace(/^v/, '');
-    if (!/^\d+\.\d+/.test(latest)) throw new Error(`Invalid version format: ${latest}`);
-    const isOutdated = latest !== currentVersion;
-
-    const text = isOutdated
-      ? `v${currentVersion} · Update available: v${latest}`
-      : `v${currentVersion} · Up to date`;
-    const color = isOutdated ? '%23e67e22' : '%2327ae60';
-
-    win.webContents.executeJavaScript(`
-      var el = document.getElementById('version-badge');
-      if (el) { el.textContent = ${JSON.stringify(text)}; el.style.color = '${color}'; }
-    `).catch(() => {});
-
-    if (isOutdated) {
-      const { response } = await dialog.showMessageBox(win, {
-        type: 'info',
-        title: 'Update Available',
-        message: `BioMolExplorer v${latest} is available`,
-        detail: `You are currently running v${currentVersion}.\nWould you like to go to the download page?`,
-        buttons: ['Download Update', 'Later'],
-        defaultId: 0,
-        cancelId: 1,
-      });
-      if (response === 0) {
-        shell.openExternal(data.html_url || RELEASES_PAGE_URL);
-      }
-    }
+    data = await res.json();
   } catch {
     // Network unavailable or API error — just show the current version silently
-    win.webContents.executeJavaScript(`
-      var el = document.getElementById('version-badge');
-      if (el) { el.textContent = 'v${currentVersion}'; }
-    `).catch(() => {});
+    setBadge(win, `v${currentVersion}`);
+    return null;
+  }
+
+  const latest = String(data.tag_name || '').replace(/^v/, '');
+  if (!/^\d+\.\d+/.test(latest)) {
+    setBadge(win, `v${currentVersion}`);
+    return null;
+  }
+  if (compareVersions(latest, currentVersion) <= 0) {
+    setBadge(win, `v${currentVersion} · Up to date`, '%2327ae60');
+    return null;
+  }
+  setBadge(win, `v${currentVersion} · Update available: v${latest}`, '%23e67e22');
+
+  // Automatic update needs both the package and its checksum. Without them, the
+  // user is sent to the release page instead.
+  const assets = Array.isArray(data.assets) ? data.assets : [];
+  const srcAsset = assets.find((a) => a.name === SRC_ASSET);
+  const shaAsset = assets.find((a) => a.name === SHA_ASSET);
+  const canAutoUpdate = Boolean(srcAsset && shaAsset);
+
+  const { response } = await dialog.showMessageBox(win, {
+    type: 'info',
+    title: 'Update Available',
+    message: `BioMolExplorer v${latest} is available`,
+    detail: canAutoUpdate
+      ? `You are currently running v${currentVersion}.\nDownload and install it now? Your datasets and results are kept.`
+      : `You are currently running v${currentVersion}.\nThis release has no automatic update package. Open the download page?`,
+    buttons: [canAutoUpdate ? 'Update Now' : 'Download Update', 'Later'],
+    defaultId: 0,
+    cancelId: 1,
+  });
+  if (response !== 0) return null;
+
+  if (!canAutoUpdate) {
+    shell.openExternal(data.html_url || RELEASES_PAGE_URL);
+    return null;
+  }
+  return {
+    version: latest,
+    srcUrl: srcAsset.browser_download_url,
+    shaUrl: shaAsset.browser_download_url,
+  };
+}
+
+// Downloads the release package and checks it against the published SHA-256.
+// Resolves to the verified local path; rejects on network errors or a mismatch.
+async function downloadUpdate(update) {
+  const headers = { 'User-Agent': 'BioMolExplorer' };
+  const signal = AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS);
+  const [srcRes, shaRes] = await Promise.all([
+    fetch(update.srcUrl, { headers, signal }),
+    fetch(update.shaUrl, { headers, signal }),
+  ]);
+  if (!srcRes.ok) throw new Error(`Package download failed (HTTP ${srcRes.status}).`);
+  if (!shaRes.ok) throw new Error(`Checksum download failed (HTTP ${shaRes.status}).`);
+
+  // sha256sum format: "<hash>  <filename>"
+  const expected = (await shaRes.text()).trim().split(/\s+/)[0].toLowerCase();
+  if (!/^[0-9a-f]{64}$/.test(expected)) throw new Error('The published checksum is malformed.');
+
+  const data = Buffer.from(await srcRes.arrayBuffer());
+  const actual = crypto.createHash('sha256').update(data).digest('hex');
+  if (actual !== expected) throw new Error('The downloaded package failed the checksum check.');
+
+  const dir = path.join(INSTALL_DIR, 'downloads');
+  fs.mkdirSync(dir, { recursive: true });
+  const dest = path.join(dir, `biomolexplorer-src-${update.version}.tar.gz`);
+  fs.writeFileSync(dest, data);
+  return dest;
+}
+
+// Runs the update check while the loading screen is shown. Resolves to the env the
+// launcher should run with: BMX_SRC_TAR points at the verified package when the user
+// accepted an update, otherwise the installed copy is used as-is.
+async function prepareUpdate(win, currentVersion) {
+  try {
+    const update = await checkForUpdates(win, currentVersion);
+    if (!update) return process.env;
+
+    setBadge(win, `Downloading BioMolExplorer v${update.version}...`);
+    const srcTar = await downloadUpdate(update);
+    setBadge(win, `v${update.version} · Installing update...`);
+    return { ...process.env, BMX_SRC_TAR: srcTar };
+  } catch (err) {
+    console.error('[main] Update failed:', err);
+    await dialog.showMessageBox(win, {
+      type: 'warning',
+      title: 'Update Failed',
+      message: 'The update could not be installed.',
+      detail: `${err.message}\n\nBioMolExplorer v${currentVersion} will start instead.`,
+      buttons: ['OK'],
+    }).catch(() => {});
+    return process.env;
   }
 }
 
@@ -133,7 +238,7 @@ function startLauncher(win) {
   const launcher = resolveLauncher(basePath);
   isNativeMode = launcher.isNative;
 
-  const currentVersion = app.getVersion();
+  const currentVersion = readInstalledVersion(app.getVersion());
 
   const modeLabel = launcher.isNative
     ? 'Activating Conda environment and starting local services...'
@@ -171,15 +276,6 @@ function startLauncher(win) {
   console.log(`[main] Engine script: ${launcher.script}`);
   console.log(`[main] Version: ${currentVersion}`);
 
-  win.webContents.once('did-finish-load', () => {
-    checkForUpdates(win, currentVersion);
-  });
-
-  let motorLogs = '';
-  let appReady = false;
-  let failMessage = null;
-  let failHint = null;
-
   if (!fs.existsSync(launcher.script)) {
     showErrorScreen(win,
       `Initialization script not found: ${launcher.script}`,
@@ -191,10 +287,24 @@ function startLauncher(win) {
     return;
   }
 
+  // The update check writes into the loading screen and may open a dialog, so the
+  // launcher only starts once the page has loaded and the check has settled.
+  win.webContents.once('did-finish-load', async () => {
+    const env = await prepareUpdate(win, currentVersion);
+    spawnLauncher(win, basePath, launcher, env);
+  });
+}
+
+function spawnLauncher(win, basePath, launcher, env) {
+  let motorLogs = '';
+  let appReady = false;
+  let failMessage = null;
+  let failHint = null;
+
   const launcherProcess = spawn(
     launcher.command,
     launcher.args(launcher.script),
-    { cwd: basePath, shell: launcher.shell }
+    { cwd: basePath, shell: launcher.shell, env }
   );
 
   let serverCheckInterval = setInterval(() => {
