@@ -69,6 +69,14 @@ As execuções seguintes são rápidas — o launcher apenas inicia os serviços
 
 ---
 
+## Atualizações
+
+O NeuroPharma verifica se há uma versão mais nova toda vez que é aberto, mostrando um pequeno indicador abaixo da tela de carregamento (ex.: `v2.0.1 · Update available: v2.1.0`). Se uma versão mais nova for encontrada, uma janela oferece baixá-la e instalá-la na hora — seus datasets e resultados são preservados de qualquer forma.
+
+Se você recusar, ou se a atualização automática não puder ser aplicada, você pode sempre baixar o `.deb` mais recente na [página de Releases](https://github.com/Lucas-Roseno/NeuroPharma/releases) e instalá-lo como descrito em [Instalação](#instalação).
+
+---
+
 ## Desinstalação
 
 ```bash
@@ -95,4 +103,7 @@ Verifique sua conexão com a internet e reabra o aplicativo. O processo de confi
 Execute `sudo apt-get install -f` para resolver dependências faltantes.
 
 **"Required external tool(s) not found: Chimera, DOCK6, DMS" ao abrir o app**
-O aplicativo verifica Chimera, DOCK6 e DMS antes de iniciar e recusa abrir se algum estiver faltando. Instale a(s) ferramenta(s) indicada(s) na tela de erro (veja os links em [Requisitos](#requisitos) acima). Depois, clique em **Retry** na própria tela de erro — não é preciso fechar e reabrir o BioMolExplorer.
+O aplicativo verifica Chimera, DOCK6 e DMS antes de iniciar e recusa abrir se algum estiver faltando. Instale a(s) ferramenta(s) indicada(s) na tela de erro (veja os links em [Requisitos](#requisitos) acima). Depois, clique em **Retry** na própria tela de erro — não é preciso fechar e reabrir o NeuroPharma.
+
+**Janela "Update Failed" ao abrir o app**
+A atualização automática não pôde ser baixada ou verificada (problema de rede, ou um release corrompido/incompleto). O app simplesmente inicia com a versão já instalada — verifique sua conexão com a internet, pois ele tenta de novo na próxima abertura, ou baixe o release manualmente (veja [Atualizações](#atualizações) abaixo).

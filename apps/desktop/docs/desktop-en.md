@@ -79,6 +79,23 @@ The `.deb` already contains everything the user needs:
 
 ---
 
+## Automatic Updates (GitHub Releases)
+
+On every launch, the app queries the latest release of `Lucas-Roseno/NeuroPharma` on GitHub and compares its version against the installed one, shown as a badge on the loading screen (`Up to date`, `Update available: vX.Y.Z`, or just the current version if the check couldn't run). If a newer release is found, the user is offered to update right away.
+
+**One-click updates require two assets attached to the GitHub release**, both already produced by `pack-source.js`:
+
+```text
+NeuroPharma-Launcher/neuropharma-src.tar.gz
+NeuroPharma-Launcher/neuropharma-src.tar.gz.sha256
+```
+
+If either is missing from the release, the app falls back to sending the user to the releases page instead of updating automatically. When both are present, the app downloads the tarball, verifies it against the published SHA-256, and hands it to `init-native.sh` (via the `BMX_SRC_TAR` env var) to install over the existing copy — no `.deb` reinstall needed, and user data / the Conda environment are untouched. A failed download or checksum mismatch shows an error dialog and the app starts the current version instead.
+
+> **Release checklist:** after `npm run build:linux-native`, publish a GitHub release tagged `vX.Y.Z` (matching the root `package.json` version) and attach `wrapper/dist/neuropharma_amd64.deb`, `neuropharma-src.tar.gz` and `neuropharma-src.tar.gz.sha256` as its assets.
+
+---
+
 ## Installing the Generated `.deb`
 
 After the build finishes, install the package with `apt`, which **automatically resolves the system dependencies** (`curl`, `psmisc`). Run this from the repository root:

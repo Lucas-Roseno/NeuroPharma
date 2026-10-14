@@ -69,6 +69,14 @@ Subsequent launches are fast — the launcher only starts the already-installed 
 
 ---
 
+## Updates
+
+NeuroPharma checks for a newer release every time it starts, shown as a small badge under the loading screen (e.g. `v2.0.1 · Update available: v2.1.0`). If a newer version is found, a dialog offers to download and install it right away — your datasets and results are kept either way.
+
+If you decline, or the automatic update can't be applied, you can always grab the latest `.deb` from the [Releases page](https://github.com/Lucas-Roseno/NeuroPharma/releases) and install it as described in [Installation](#installation).
+
+---
+
 ## Uninstalling
 
 ```bash
@@ -95,4 +103,7 @@ Check your internet connection and relaunch the application. The setup process i
 Run `sudo apt-get install -f` to resolve missing dependencies.
 
 **"Required external tool(s) not found: Chimera, DOCK6, DMS" on startup**
-The app checks for Chimera, DOCK6 and DMS before starting and refuses to launch if any is missing. Install the tool(s) named in the error screen (see [Requirements](#requirements) above for links). Then click **Retry** right there on the error screen — no need to close and reopen BioMolExplorer.
+The app checks for Chimera, DOCK6 and DMS before starting and refuses to launch if any is missing. Install the tool(s) named in the error screen (see [Requirements](#requirements) above for links). Then click **Retry** right there on the error screen — no need to close and reopen NeuroPharma.
+
+**"Update Failed" dialog on startup**
+The automatic update couldn't be downloaded or verified (network issue, or a corrupted/incomplete release). The app simply starts with the version you already have installed — check your internet connection and it will try again on the next launch, or you can download the release manually (see [Updates](#updates) below).

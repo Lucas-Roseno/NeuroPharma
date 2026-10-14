@@ -79,6 +79,23 @@ O `.deb` já contém tudo que o usuário precisa:
 
 ---
 
+## Atualizações Automáticas (GitHub Releases)
+
+Em toda abertura, o app consulta o último release de `Lucas-Roseno/NeuroPharma` no GitHub e compara a versão com a instalada, mostrando um indicador na tela de carregamento (`Up to date`, `Update available: vX.Y.Z`, ou só a versão atual se a checagem não puder ser feita). Se um release mais novo for encontrado, o usuário recebe a opção de atualizar na hora.
+
+**A atualização em um clique exige dois assets anexados ao release do GitHub**, ambos já gerados pelo `pack-source.js`:
+
+```text
+NeuroPharma-Launcher/neuropharma-src.tar.gz
+NeuroPharma-Launcher/neuropharma-src.tar.gz.sha256
+```
+
+Se algum dos dois estiver faltando no release, o app cai no fallback de mandar o usuário para a página de releases em vez de atualizar automaticamente. Quando os dois estão presentes, o app baixa o tarball, verifica contra o SHA-256 publicado, e passa para o `init-native.sh` (via a variável de ambiente `BMX_SRC_TAR`) para instalar sobre a cópia existente — sem precisar reinstalar o `.deb`, e sem tocar nos dados do usuário nem no ambiente Conda. Falha no download ou checksum incorreto mostram uma janela de erro e o app inicia a versão atual mesmo assim.
+
+> **Checklist de release:** depois de `npm run build:linux-native`, publique um release no GitHub com a tag `vX.Y.Z` (igual à versão do `package.json` raiz) e anexe `wrapper/dist/neuropharma_amd64.deb`, `neuropharma-src.tar.gz` e `neuropharma-src.tar.gz.sha256` como assets.
+
+---
+
 ## Instalando o `.deb` Gerado
 
 Após o build terminar, instale o pacote com o `apt`, que **resolve automaticamente as dependências de sistema** (`curl`, `psmisc`). Execute a partir da raiz do repositório:
