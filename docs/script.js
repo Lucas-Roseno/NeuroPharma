@@ -36,3 +36,21 @@
 
   revealElements.forEach((element) => observer.observe(element));
 })();
+
+// Keeps the hero's version badge in sync with the latest GitHub release,
+// instead of a number that has to be bumped by hand on every deploy.
+(() => {
+  const versionEl = document.querySelector("[data-release-version]");
+  if (!versionEl) return;
+
+  fetch("https://api.github.com/repos/Lucas-Roseno/NeuroPharma/releases/latest", {
+    headers: { Accept: "application/vnd.github+json" },
+  })
+    .then((res) => (res.ok ? res.json() : null))
+    .then((data) => {
+      if (data?.tag_name) versionEl.textContent = `Version ${data.tag_name.replace(/^v/, "")}`;
+    })
+    .catch(() => {
+      // Keep the static fallback already in the HTML (e.g. offline, rate-limited).
+    });
+})();
